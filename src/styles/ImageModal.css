@@ -1,0 +1,35 @@
+.image-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .image-modal-content {
+    width: 95vw;
+    height: 95vh;
+    background-color: #222;
+    padding: 16px;
+    box-shadow: 24px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .image-modal-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .image-modal-title {
+    position: absolute;
+    bottom: 16px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  

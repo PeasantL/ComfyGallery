@@ -1,0 +1,14 @@
+.app-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #222;
+    z-index: 1201;
+    border-bottom: 1px solid #444;
+  }
+  
