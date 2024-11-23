@@ -1,21 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { CssBaseline, ThemeProvider, createTheme, GlobalStyles } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme} from '@mui/material';
+//import { GlobalStyles } from '@mui/system';
 import App from './App';
 
 // Define the debug styles
-const debugStyles = {
-  '*': {
-    border: '1px dashed rgba(255, 0, 0, 0.5) !important', // Debug border for all elements
-    boxSizing: 'border-box',
-  },
-  '*::before': {
-    border: '1px dashed rgba(255, 0, 0, 0.5) !important',
-  },
-  '*::after': {
-    border: '1px dashed rgba(255, 0, 0, 0.5) !important',
-  },
-};
+// const debugStyles = {
+//   '*': {
+//     border: '1px dashed rgba(255, 0, 0, 0.5) !important', // Debug border for all elements
+//     boxSizing: 'border-box',
+//   },
+//   '*::before': {
+//     border: '1px dashed rgba(255, 0, 0, 0.5) !important',
+//   },
+//   '*::after': {
+//     border: '1px dashed rgba(255, 0, 0, 0.5) !important',
+//   },
+// };
 
 // Define your dark theme
 const darkTheme = createTheme({
