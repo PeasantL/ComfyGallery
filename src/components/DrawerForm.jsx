@@ -1,15 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Drawer,
-  Autocomplete,
-  Chip,
-  Stack,
-  Divider,
-} from '@mui/material'
+import { Box, Typography, Button, Drawer, Stack, Divider } from '@mui/material'
 import PropTypes from 'prop-types'
 import '../styles/DrawerForm.css'
 import DrawerFormTagAuto from './DrawerFormTagAuto'
@@ -71,6 +61,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
 
           <DrawerFormTagAuto
             label="Quality Tags"
+            hideTags={true}
             initialTags={[
               'masterpiece',
               'best quality',
@@ -94,6 +85,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
         <Stack spacing={3}>
           <DrawerFormTagAuto
             label="Default Negatives"
+            hideTags={true}
             initialTags={[
               'worst quality',
               'old',

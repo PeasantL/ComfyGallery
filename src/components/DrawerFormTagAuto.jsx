@@ -7,6 +7,7 @@ const DrawerFormTagAuto = ({
   label,
   placeholder,
   initialTags = [],
+  hideTags = false,
 }) => {
   const [tags, setTags] = useState(initialTags)
   const [options, setOptions] = useState([])
@@ -52,6 +53,7 @@ const DrawerFormTagAuto = ({
   return (
     <Stack spacing={2}>
       <Autocomplete
+        {...(hideTags ? { limitTags: 1 } : {})} // Conditionally include limitTags
         multiple
         id="tags-filled"
         options={options}
@@ -89,6 +91,8 @@ DrawerFormTagAuto.propTypes = {
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   initialTags: PropTypes.arrayOf(PropTypes.string),
+  hideTags: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+  noTags: PropTypes.bool, // Added noTags prop
 }
 
 export default DrawerFormTagAuto
