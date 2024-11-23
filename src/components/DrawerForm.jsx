@@ -5,6 +5,67 @@ import '../styles/DrawerForm.css'
 import DrawerFormTagAuto from './DrawerFormTagAuto'
 
 const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
+  // State variables for each set of tags
+  const [participantTags, setParticipantTags] = useState(['1girl'])
+  const [characterTags, setCharacterTags] = useState([])
+  const [artistTags, setArtistTags] = useState([])
+  const [generalTags, setGeneralTags] = useState([])
+  const [qualityTags, setQualityTags] = useState([
+    'masterpiece',
+    'best quality',
+    'newest',
+    'absurdres',
+    'highres',
+    'very awa',
+  ])
+  const [defaultNegativeTags, setDefaultNegativeTags] = useState([
+    'worst quality',
+    'old',
+    'early',
+    'low quality',
+    'lowres',
+    'signature',
+    'username',
+    'logo',
+    'bad hands',
+    'mutated hands',
+    'mammal',
+    'anthro',
+    'furry',
+    'ambiguous form',
+    'feral',
+    'semi-anthro',
+  ])
+  const [additionalNegativeTags, setAdditionalNegativeTags] = useState([])
+
+  // State variables to store the generated clips
+  const [positiveClip, setPositiveClip] = useState('')
+  const [negativeClip, setNegativeClip] = useState('')
+
+  // Function to handle Generate button click
+  const handleGenerate = () => {
+    // Combine positive tags
+    const positiveTags = [
+      ...participantTags,
+      ...characterTags,
+      ...artistTags,
+      ...generalTags,
+      ...qualityTags,
+    ]
+    const positiveClipString = positiveTags.join(', ')
+
+    // Combine negative tags
+    const negativeTags = [...defaultNegativeTags, ...additionalNegativeTags]
+    const negativeClipString = negativeTags.join(', ')
+
+    // Update the state with the new clips
+    setPositiveClip(positiveClipString)
+    setNegativeClip(negativeClipString)
+
+    // You can use these strings as needed, for example:
+    // Send them to an API, update state, display them, etc.
+  }
+
   return (
     <Drawer
       variant="persistent"
@@ -28,7 +89,6 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
         <Typography
           variant="subtitle2"
           gutterBottom
-          cent
           sx={{ marginTop: 2, textAlign: 'center' }}
         >
           Positive Clip
@@ -38,45 +98,47 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
           <DrawerFormTagAuto
             variableFile="src/assets/participant.json"
             label="Participant"
-            initialTags={['1girl']}
+            placeholder="1girl"
+            tags={participantTags}
+            setTags={setParticipantTags}
           />
 
           <DrawerFormTagAuto
             variableFile="src/assets/danbooru-tags.json"
             label="Character, Series"
             placeholder="Ganyu"
+            tags={characterTags}
+            setTags={setCharacterTags}
           />
 
           <DrawerFormTagAuto
             variableFile="src/assets/danbooru-tags.json"
             label="Artist"
             placeholder="nyatcha"
+            tags={artistTags}
+            setTags={setArtistTags}
           />
 
           <DrawerFormTagAuto
             variableFile="src/assets/danbooru-tags.json"
             label="General Tags"
             placeholder="safe"
+            tags={generalTags}
+            setTags={setGeneralTags}
           />
 
           <DrawerFormTagAuto
             label="Quality Tags"
+            placeholder="masterpiece"
             hideTags={true}
-            initialTags={[
-              'masterpiece',
-              'best quality',
-              'newest',
-              'absurdres',
-              'highres',
-              'very awa',
-            ]}
+            tags={qualityTags}
+            setTags={setQualityTags}
           />
         </Stack>
 
         <Typography
           variant="subtitle2"
           gutterBottom
-          cent
           sx={{ marginTop: 2, textAlign: 'center' }}
         >
           Negative Clip
@@ -85,33 +147,42 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
         <Stack spacing={3}>
           <DrawerFormTagAuto
             label="Default Negatives"
+            placeholder="worst quality"
             hideTags={true}
-            initialTags={[
-              'worst quality',
-              'old',
-              'early',
-              'low quality',
-              'lowres',
-              'signature',
-              'username',
-              'logo',
-              'bad hands',
-              'mutated hands',
-              'mammal',
-              'anthro',
-              'furry',
-              'ambiguous form',
-              'feral',
-              'semi-anthro',
-            ]}
+            tags={defaultNegativeTags}
+            setTags={setDefaultNegativeTags}
           />
-          <DrawerFormTagAuto label="Additional Negatives" placeholder="nsfw" />
+          <DrawerFormTagAuto
+            label="Additional Negatives"
+            placeholder="nsfw"
+            tags={additionalNegativeTags}
+            setTags={setAdditionalNegativeTags}
+          />
         </Stack>
 
         <Divider sx={{ borderColor: '#555', marginBottom: 2 }} />
-        <Button variant="contained" color="primary" fullWidth>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleGenerate}
+        >
           Generate
         </Button>
+
+        {/* Display the generated clips */}
+        {positiveClip && (
+          <Box sx={{ marginTop: 2 }}>
+            <Typography variant="h6">Positive Clip:</Typography>
+            <Typography variant="body1">{positiveClip}</Typography>
+          </Box>
+        )}
+        {negativeClip && (
+          <Box sx={{ marginTop: 2 }}>
+            <Typography variant="h6">Negative Clip:</Typography>
+            <Typography variant="body1">{negativeClip}</Typography>
+          </Box>
+        )}
       </Box>
     </Drawer>
   )

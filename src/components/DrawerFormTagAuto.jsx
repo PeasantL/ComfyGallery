@@ -6,10 +6,10 @@ const DrawerFormTagAuto = ({
   variableFile,
   label,
   placeholder,
-  initialTags = [],
+  tags, // Use tags from props
+  setTags, // Use setTags from props
   hideTags = false,
 }) => {
-  const [tags, setTags] = useState(initialTags)
   const [options, setOptions] = useState([])
   const [inputValue, setInputValue] = useState('') // Controlled input value
 
@@ -77,7 +77,7 @@ const DrawerFormTagAuto = ({
             variant="filled"
             multiline
             label={label}
-            placeholder={placeholder}
+            placeholder={tags.length === 0 ? placeholder : ''} // Hide placeholder if there are tags
             onKeyDown={handleKeyDown}
           />
         )}
@@ -89,10 +89,10 @@ const DrawerFormTagAuto = ({
 DrawerFormTagAuto.propTypes = {
   variableFile: PropTypes.string,
   label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
-  initialTags: PropTypes.arrayOf(PropTypes.string),
+  placeholder: PropTypes.string,
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setTags: PropTypes.func.isRequired,
   hideTags: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
-  noTags: PropTypes.bool, // Added noTags prop
 }
 
 export default DrawerFormTagAuto
