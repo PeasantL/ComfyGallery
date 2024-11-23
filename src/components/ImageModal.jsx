@@ -1,10 +1,10 @@
-import { Modal, Box, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
-import '../styles/ImageModal.css';
+import { Modal, Box, Typography } from '@mui/material'
+import PropTypes from 'prop-types'
+import '../styles/ImageModal.css'
 
 const ImageModal = ({ isOpen, image, onClose }) => (
   <Modal open={isOpen} onClose={onClose} className="image-modal">
-    <Box className="image-modal-content">
+    <Box className="image-modal-content" onClick={onClose}>
       {image && (
         <>
           <img src={image.src} alt={image.title} className="image-modal-img" />
@@ -15,7 +15,7 @@ const ImageModal = ({ isOpen, image, onClose }) => (
       )}
     </Box>
   </Modal>
-);
+)
 
 ImageModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -25,10 +25,10 @@ ImageModal.propTypes = {
     src: PropTypes.string,
   }),
   onClose: PropTypes.func.isRequired,
-};
+}
 
 ImageModal.defaultProps = {
   image: null,
-};
+}
 
-export default ImageModal;
+export default ImageModal

@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { CssBaseline, ThemeProvider, createTheme} from '@mui/material';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 //import { GlobalStyles } from '@mui/system';
-import App from './App';
+import App from './App'
 
 // Define the debug styles
 // const debugStyles = {
@@ -25,7 +25,7 @@ const darkTheme = createTheme({
     primary: { main: '#90caf9' },
     secondary: { main: '#f48fb1' },
   },
-});
+})
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -35,4 +35,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <App />
     </ThemeProvider>
   </React.StrictMode>
-);
+)
