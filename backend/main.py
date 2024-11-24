@@ -36,6 +36,9 @@ app.add_middleware(
 class Prompt(BaseModel):
     positive_clip: str
     negative_clip: str
+    character_tags: list[str]
+    artist_tags: list[str]
+
 
 # Queue the prompt with the backend server
 def queue_prompt(prompt):
@@ -45,22 +48,27 @@ def queue_prompt(prompt):
     return json.loads(urllib.request.urlopen(req).read())
 
 # Save the image to a folder
-def save_image(image_data, base_filename):
+def save_image(image_data, base_filename, character, artist):
+    index = 1
     image = Image.open(io.BytesIO(image_data))
     
-    # Ensure filename uniqueness by incrementing an index
-    index = 1
-    while True:
-        filename = f"{base_filename}_{index}.png"
-        file_path = os.path.join(IMAGES_FOLDER, filename)
-        if not os.path.exists(file_path):  # Break if file does not exist
-            break
-        index += 1
+    # Ensure safe characters in the filename
+    safe_character = character.replace(" ", "_").replace("/", "_")
+    safe_artist = artist.replace(" ", "_").replace("/", "_")
     
+    # Generate the initial filename
+    filename = f"{safe_character}_{safe_artist}_{index}.png"
+    file_path = os.path.join(IMAGES_FOLDER, filename)
+    
+    # Check if the file already exists and increment index if needed
+    while os.path.exists(file_path):
+        index += 1
+        filename = f"{safe_character}_{safe_artist}_{index}.png"
+        file_path = os.path.join(IMAGES_FOLDER, filename)
+
     # Save the image
     image.save(file_path)
     return file_path
-
 
 # WebSocket image retrieval
 def get_images_via_websocket(ws, prompt):
@@ -353,9 +361,11 @@ async def generate_image(prompt: Prompt):
     
     saved_files = []
     for node_id in images:
-        for index, image_data in enumerate(images[node_id]):
-            filename = f"{node_id}"
-            file_path = save_image(image_data, filename)
+        for image_data in images[node_id]:
+            # Use character_tags and artist_tags from the request
+            character = prompt.character_tags[0].split(",")[0] if prompt.character_tags else "char"
+            artist = prompt.artist_tags[0] if prompt.artist_tags else "artist"
+            file_path = save_image(image_data, node_id, character, artist)
             saved_files.append(file_path)
     
     return {"saved_files": saved_files}
@@ -374,5 +384,13 @@ def get_image(filename: str):
         raise HTTPException(status_code=404, detail="Image not found")
     return FileResponse(file_path)
 
+import subprocess
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)  # Listen on all interfaces
+    subprocess.run([
+        "uvicorn",
+        "main:app",  # Replace 'main' with your module name
+        "--host", "0.0.0.0",
+        "--port", "8000",
+        "--reload"
+    ])

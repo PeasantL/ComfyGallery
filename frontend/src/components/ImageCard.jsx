@@ -12,7 +12,7 @@ const ImageCard = ({ image, onClick }) => (
     />
     <CardContent className="image-card-content">
       <Typography variant="subtitle2" gutterBottom>
-        {image.title}
+        {image.title.slice(0, -4)} {/* Truncate 4 characters from the end */}
       </Typography>
     </CardContent>
   </Card>

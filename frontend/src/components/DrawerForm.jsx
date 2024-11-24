@@ -104,7 +104,9 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
     try {
       const savedFiles = await generateImage(
         positiveClipString,
-        negativeClipString
+        negativeClipString,
+        tags.characterTags,
+        tags.artistTags
       )
       console.log('Image generated successfully:', savedFiles)
 
@@ -162,7 +164,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
           <DrawerFormTagAuto
             variableFile="src/assets/char.json"
             label="Character, Series"
-            placeholder="Ganyu"
+            placeholder="ganyu \(genshin impact\), genshin"
             tags={tags.characterTags}
             setTags={(newTags) =>
               setTags((prev) => ({ ...prev, characterTags: newTags }))
@@ -253,7 +255,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
           gutterBottom
           className="subtitle-centered"
         >
-          Prompt Printout
+          Latest Prompt
         </Typography>
         <Divider className="divider-custom" />
         {positiveClip && (

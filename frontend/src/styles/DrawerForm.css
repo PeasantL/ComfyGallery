@@ -19,12 +19,10 @@
   margin-top: 10px;
 }
 
-.circular-progress-custom {
+.MuiCircularProgress-root.circular-progress-custom {
   color: #fff;
   position: absolute;
-  top: 50%;
   left: 50%;
-  margin-top: -12px;
   margin-left: -12px;
 }
 

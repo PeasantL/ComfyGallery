@@ -1,6 +1,9 @@
-// generateImage.js
-
-const generateImage = async (positiveClip, negativeClip) => {
+const generateImage = async (
+  positiveClip,
+  negativeClip,
+  characterTags,
+  artistTags
+) => {
   try {
     const response = await fetch('/api/generate-image/', {
       method: 'POST',
@@ -10,6 +13,8 @@ const generateImage = async (positiveClip, negativeClip) => {
       body: JSON.stringify({
         positive_clip: positiveClip,
         negative_clip: negativeClip,
+        character_tags: characterTags,
+        artist_tags: artistTags,
       }),
     })
 

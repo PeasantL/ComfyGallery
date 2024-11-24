@@ -8,9 +8,9 @@ const ImageModal = ({ isOpen, image, onClose }) => (
       {image && (
         <>
           <img src={image.src} alt={image.title} className="image-modal-img" />
-          <Typography variant="h6" className="image-modal-title">
+          {/* <Typography variant="h6" className="image-modal-title">
             {image.title}
-          </Typography>
+          </Typography> */}
         </>
       )}
     </Box>
