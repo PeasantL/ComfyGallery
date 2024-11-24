@@ -3,7 +3,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 100%;
+  width: 42px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

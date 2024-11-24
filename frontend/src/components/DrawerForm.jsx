@@ -156,7 +156,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       sx={{
         '& .MuiDrawer-paper': {
           width: drawerWidth,
-          top: '64px',
+          left: '42px',
           bottom: 0,
           backgroundColor: '#333',
           color: '#fff',
@@ -167,7 +167,6 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       <Box
         className="drawer-form"
         sx={{
-          height: 'calc(100% - 64px)',
           overflowY: 'auto',
           padding: '16px',
           WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS

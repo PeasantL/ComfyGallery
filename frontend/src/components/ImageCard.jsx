@@ -11,7 +11,7 @@ const ImageCard = ({ image, onClick }) => (
       alt={image.title}
     />
     <CardContent className="image-card-content">
-      <Typography variant="subtitle1" gutterBottom>
+      <Typography variant="subtitle2" gutterBottom>
         {image.title}
       </Typography>
     </CardContent>
