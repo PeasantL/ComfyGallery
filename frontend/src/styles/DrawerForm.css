@@ -4,14 +4,14 @@
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
-.subtitle-centered {
+.subtitle-centered.MuiTypography-root {
   margin-top: 16px;
   text-align: center;
 }
 
-.divider-custom {
+.divider-custom.MuiDivider-root {
   border-color: #555;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .button-container {
@@ -33,4 +33,12 @@
 
 .drawer-input {
   margin-bottom: 20px;
+}
+
+.drawer-paper.MuiDrawer-paper {
+  left: 42px;
+  top: 0;
+  bottom: 0;
+  background-color: #333;
+  color: #fff;
 }

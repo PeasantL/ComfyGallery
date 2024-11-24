@@ -153,13 +153,9 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       variant="persistent"
       anchor="left"
       open={isDrawerOpen}
-      sx={{
-        '& .MuiDrawer-paper': {
-          left: '42px', //can't seem to overide this with a custom class
-          top: 0,
-          bottom: 0,
-          backgroundColor: '#333',
-          color: '#fff',
+      classes={{ paper: 'drawer-paper' }}
+      PaperProps={{
+        style: {
           width: drawerWidth,
         },
       }}
