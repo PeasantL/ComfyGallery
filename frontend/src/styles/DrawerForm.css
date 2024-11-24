@@ -5,17 +5,18 @@
 }
 
 .subtitle-centered.MuiTypography-root {
-  margin-top: 16px;
+  margin-top: 25px;
   text-align: center;
 }
 
 .divider-custom.MuiDivider-root {
   border-color: #555;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .button-container {
   position: relative;
+  margin-top: 10px;
 }
 
 .circular-progress-custom {

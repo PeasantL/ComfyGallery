@@ -13,110 +13,89 @@ import '../styles/DrawerForm.css'
 import DrawerFormTagAuto from './DrawerFormTagAuto'
 import generateImage from '../utils/generateImage'
 
-const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
-  // Utility function to get data from localStorage
-  const getStoredTags = (key, defaultValue) =>
-    JSON.parse(localStorage.getItem(key)) || defaultValue
+// Default tag values
+const TAG_DEFAULTS = {
+  participantTags: ['1girl'],
+  characterTags: [],
+  artistTags: [],
+  generalTags: [],
+  qualityTags: [
+    'masterpiece',
+    'best quality',
+    'newest',
+    'absurdres',
+    'highres',
+    'very awa',
+  ],
+  defaultNegativeTags: [
+    'worst quality',
+    'old',
+    'early',
+    'low quality',
+    'lowres',
+    'signature',
+    'username',
+    'logo',
+    'bad hands',
+    'mutated hands',
+    'mammal',
+    'anthro',
+    'furry',
+    'ambiguous form',
+    'feral',
+    'semi-anthro',
+  ],
+  additionalNegativeTags: [],
+}
 
-  // State variables with localStorage persistence
-  const [participantTags, setParticipantTags] = useState(
-    getStoredTags('participantTags', ['1girl'])
-  )
-  const [characterTags, setCharacterTags] = useState(
-    getStoredTags('characterTags', [])
-  )
-  const [artistTags, setArtistTags] = useState(getStoredTags('artistTags', []))
-  const [generalTags, setGeneralTags] = useState(
-    getStoredTags('generalTags', [])
-  )
-  const [qualityTags, setQualityTags] = useState(
-    getStoredTags('qualityTags', [
-      'masterpiece',
-      'best quality',
-      'newest',
-      'absurdres',
-      'highres',
-      'very awa',
-    ])
-  )
-  const [defaultNegativeTags, setDefaultNegativeTags] = useState(
-    getStoredTags('defaultNegativeTags', [
-      'worst quality',
-      'old',
-      'early',
-      'low quality',
-      'lowres',
-      'signature',
-      'username',
-      'logo',
-      'bad hands',
-      'mutated hands',
-      'mammal',
-      'anthro',
-      'furry',
-      'ambiguous form',
-      'feral',
-      'semi-anthro',
-    ])
-  )
-  const [additionalNegativeTags, setAdditionalNegativeTags] = useState(
-    getStoredTags('additionalNegativeTags', [])
+// Utility function to get data from localStorage or use defaults
+const getStoredTags = (key, defaultValue) =>
+  JSON.parse(localStorage.getItem(key)) || defaultValue
+
+const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
+  // State variables with default values
+  const [tags, setTags] = useState(() =>
+    Object.keys(TAG_DEFAULTS).reduce((acc, key) => {
+      acc[key] = getStoredTags(key, TAG_DEFAULTS[key])
+      return acc
+    }, {})
   )
 
   const [positiveClip, setPositiveClip] = useState('')
   const [negativeClip, setNegativeClip] = useState('')
-
-  // Loading state for the button
   const [loading, setLoading] = useState(false)
 
-  // Save state to localStorage whenever it updates
+  // Save state to localStorage whenever tags update
   useEffect(() => {
-    localStorage.setItem('participantTags', JSON.stringify(participantTags))
-  }, [participantTags])
+    Object.keys(tags).forEach((key) => {
+      localStorage.setItem(key, JSON.stringify(tags[key]))
+    })
+  }, [tags])
 
-  useEffect(() => {
-    localStorage.setItem('characterTags', JSON.stringify(characterTags))
-  }, [characterTags])
-
-  useEffect(() => {
-    localStorage.setItem('artistTags', JSON.stringify(artistTags))
-  }, [artistTags])
-
-  useEffect(() => {
-    localStorage.setItem('generalTags', JSON.stringify(generalTags))
-  }, [generalTags])
-
-  useEffect(() => {
-    localStorage.setItem('qualityTags', JSON.stringify(qualityTags))
-  }, [qualityTags])
-
-  useEffect(() => {
-    localStorage.setItem(
-      'defaultNegativeTags',
-      JSON.stringify(defaultNegativeTags)
-    )
-  }, [defaultNegativeTags])
-
-  useEffect(() => {
-    localStorage.setItem(
-      'additionalNegativeTags',
-      JSON.stringify(additionalNegativeTags)
-    )
-  }, [additionalNegativeTags])
+  // Function to reset tags to default values
+  const handleReset = () => {
+    setTags(TAG_DEFAULTS)
+    Object.keys(TAG_DEFAULTS).forEach((key) => {
+      localStorage.setItem(key, JSON.stringify(TAG_DEFAULTS[key]))
+    })
+  }
 
   // Function to handle Generate button click
   const handleGenerate = async () => {
-    setLoading(true) // Start loading
+    setLoading(true)
     const positiveTags = [
-      ...participantTags,
-      ...characterTags,
-      ...artistTags,
-      ...generalTags,
-      ...qualityTags,
+      ...tags.participantTags,
+      ...tags.characterTags,
+      ...tags.artistTags,
+      ...tags.generalTags,
+      ...tags.qualityTags,
     ]
-    const positiveClipString = positiveTags.join(', ')
+    const negativeTags = [
+      ...tags.defaultNegativeTags,
+      ...tags.additionalNegativeTags,
+    ]
 
-    const negativeTags = [...defaultNegativeTags, ...additionalNegativeTags]
+    const positiveClipString = positiveTags.join(', ')
     const negativeClipString = negativeTags.join(', ')
 
     setPositiveClip(positiveClipString)
@@ -129,10 +108,8 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       )
       console.log('Image generated successfully:', savedFiles)
 
-      if (savedFiles && savedFiles.length > 0) {
+      if (savedFiles?.length > 0) {
         savedFiles.forEach((filepath) => {
-          console.log('Saved file path:', filepath) // Log the filepath
-          // Remove './images/' from the beginning if present
           const filename = filepath.startsWith('./images/')
             ? filepath.substring('./images/'.length)
             : filepath.replace(/^.*[\\\/]/, '')
@@ -144,7 +121,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
     } catch (error) {
       console.error('Error generating image:', error)
     } finally {
-      setLoading(false) // End loading
+      setLoading(false)
     }
   }
 
@@ -172,45 +149,51 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
           Positive Clip
         </Typography>
         <Divider className="divider-custom" />
-        <Stack spacing={3}>
+        <Stack spacing={2}>
           <DrawerFormTagAuto
             variableFile="src/assets/participant.json"
             label="Participant"
             placeholder="1girl"
-            tags={participantTags}
-            setTags={setParticipantTags}
+            tags={tags.participantTags}
+            setTags={(newTags) =>
+              setTags((prev) => ({ ...prev, participantTags: newTags }))
+            }
           />
-
           <DrawerFormTagAuto
             variableFile="src/assets/char.json"
             label="Character, Series"
             placeholder="Ganyu"
-            tags={characterTags}
-            setTags={setCharacterTags}
+            tags={tags.characterTags}
+            setTags={(newTags) =>
+              setTags((prev) => ({ ...prev, characterTags: newTags }))
+            }
           />
-
           <DrawerFormTagAuto
             variableFile="src/assets/artist.json"
             label="Artist"
             placeholder="nyatcha"
-            tags={artistTags}
-            setTags={setArtistTags}
+            tags={tags.artistTags}
+            setTags={(newTags) =>
+              setTags((prev) => ({ ...prev, artistTags: newTags }))
+            }
           />
-
           <DrawerFormTagAuto
             variableFile="src/assets/danbooru-tags.json"
             label="General Tags"
             placeholder="safe"
-            tags={generalTags}
-            setTags={setGeneralTags}
+            tags={tags.generalTags}
+            setTags={(newTags) =>
+              setTags((prev) => ({ ...prev, generalTags: newTags }))
+            }
           />
-
           <DrawerFormTagAuto
             label="Quality Tags"
             placeholder="masterpiece"
             hideTags={true}
-            tags={qualityTags}
-            setTags={setQualityTags}
+            tags={tags.qualityTags}
+            setTags={(newTags) =>
+              setTags((prev) => ({ ...prev, qualityTags: newTags }))
+            }
           />
         </Stack>
 
@@ -222,24 +205,27 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
           Negative Clip
         </Typography>
         <Divider className="divider-custom" />
-        <Stack spacing={3}>
+        <Stack spacing={2}>
           <DrawerFormTagAuto
             label="Default Negatives"
             placeholder="worst quality"
             hideTags={true}
-            tags={defaultNegativeTags}
-            setTags={setDefaultNegativeTags}
+            tags={tags.defaultNegativeTags}
+            setTags={(newTags) =>
+              setTags((prev) => ({ ...prev, defaultNegativeTags: newTags }))
+            }
           />
           <DrawerFormTagAuto
             label="Additional Negatives"
             placeholder="nsfw"
-            tags={additionalNegativeTags}
-            setTags={setAdditionalNegativeTags}
+            tags={tags.additionalNegativeTags}
+            setTags={(newTags) =>
+              setTags((prev) => ({ ...prev, additionalNegativeTags: newTags }))
+            }
           />
         </Stack>
 
-        <Divider className="divider-custom" />
-        <Box className="button-container">
+        <Stack spacing={1} className="button-container">
           <Button
             variant="contained"
             color="primary"
@@ -252,19 +238,34 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
           {loading && (
             <CircularProgress size={24} className="circular-progress-custom" />
           )}
-        </Box>
+          <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
+        </Stack>
 
-        {/* Display the generated clips */}
+        <Typography
+          variant="subtitle2"
+          gutterBottom
+          className="subtitle-centered"
+        >
+          Prompt Printout
+        </Typography>
+        <Divider className="divider-custom" />
         {positiveClip && (
           <Box className="clip-box">
-            <Typography variant="h6">Positive Clip:</Typography>
-            <Typography variant="body1">{positiveClip}</Typography>
+            <Typography variant="h7">Positive Clip:</Typography>
+            <Typography variant="body2">{positiveClip}</Typography>
           </Box>
         )}
         {negativeClip && (
           <Box className="clip-box">
-            <Typography variant="h6">Negative Clip:</Typography>
-            <Typography variant="body1">{negativeClip}</Typography>
+            <Typography variant="h7">Negative Clip:</Typography>
+            <Typography variant="body2">{negativeClip}</Typography>
           </Box>
         )}
       </Box>

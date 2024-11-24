@@ -6,7 +6,7 @@ import ImageCatalog from './components/ImageCatalog'
 import ImageModal from './components/ImageModal'
 import { useImages } from './utils/image'
 
-const drawerWidth = 300
+const drawerWidth = 350
 
 const App = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
