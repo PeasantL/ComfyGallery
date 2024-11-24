@@ -155,34 +155,27 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       open={isDrawerOpen}
       sx={{
         '& .MuiDrawer-paper': {
-          width: drawerWidth,
-          left: '42px',
+          left: '42px', //can't seem to overide this with a custom class
+          top: 0,
           bottom: 0,
           backgroundColor: '#333',
           color: '#fff',
-          // Remove position: 'fixed' and top/bottom properties
+          width: drawerWidth,
         },
       }}
     >
-      <Box
-        className="drawer-form"
-        sx={{
-          overflowY: 'auto',
-          padding: '16px',
-          WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
-        }}
-      >
+      <Box className="drawer-form">
         <Typography variant="h5" gutterBottom>
           Prompt
         </Typography>
         <Typography
           variant="subtitle2"
           gutterBottom
-          sx={{ marginTop: 2, textAlign: 'center' }}
+          className="subtitle-centered"
         >
           Positive Clip
         </Typography>
-        <Divider sx={{ borderColor: '#555', marginBottom: 2 }} />
+        <Divider className="divider-custom" />
         <Stack spacing={3}>
           <DrawerFormTagAuto
             variableFile="src/assets/participant.json"
@@ -228,11 +221,11 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
         <Typography
           variant="subtitle2"
           gutterBottom
-          sx={{ marginTop: 2, textAlign: 'center' }}
+          className="subtitle-centered"
         >
           Negative Clip
         </Typography>
-        <Divider sx={{ borderColor: '#555', marginBottom: 2 }} />
+        <Divider className="divider-custom" />
         <Stack spacing={3}>
           <DrawerFormTagAuto
             label="Default Negatives"
@@ -249,8 +242,8 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
           />
         </Stack>
 
-        <Divider sx={{ borderColor: '#555', marginBottom: 2 }} />
-        <Box sx={{ position: 'relative' }}>
+        <Divider className="divider-custom" />
+        <Box className="button-container">
           <Button
             variant="contained"
             color="primary"
@@ -261,29 +254,19 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
             Generate
           </Button>
           {loading && (
-            <CircularProgress
-              size={24}
-              sx={{
-                color: '#fff',
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                marginTop: '-12px',
-                marginLeft: '-12px',
-              }}
-            />
+            <CircularProgress size={24} className="circular-progress-custom" />
           )}
         </Box>
 
         {/* Display the generated clips */}
         {positiveClip && (
-          <Box sx={{ marginTop: 2 }}>
+          <Box className="clip-box">
             <Typography variant="h6">Positive Clip:</Typography>
             <Typography variant="body1">{positiveClip}</Typography>
           </Box>
         )}
         {negativeClip && (
-          <Box sx={{ marginTop: 2 }}>
+          <Box className="clip-box">
             <Typography variant="h6">Negative Clip:</Typography>
             <Typography variant="body1">{negativeClip}</Typography>
           </Box>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Box } from '@mui/material'
+import './App.css' // Import the external CSS file
 import AppBar from './components/AppBar'
 import DrawerForm from './components/DrawerForm'
 import ImageCatalog from './components/ImageCatalog'
@@ -38,35 +38,28 @@ const App = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div className="App">
       <AppBar toggleDrawer={() => setDrawerOpen(!isDrawerOpen)} />
-      <Box sx={{ display: 'flex', flexGrow: 1 }}>
+      <div className="App__content">
         <DrawerForm
           isDrawerOpen={isDrawerOpen}
           drawerWidth={drawerWidth}
           addImage={addImage}
         />
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            padding: 2,
-            marginTop: '64px',
-            marginLeft: isDrawerOpen ? `${drawerWidth}px` : '0px',
-            transition: 'margin-left 0.3s ease',
-            backgroundColor: '#121212',
-            color: '#fff',
-          }}
+        <div
+          className={`App__main ${
+            isDrawerOpen ? 'App__main--drawer-open' : ''
+          }`}
         >
           <ImageCatalog images={images} handleCardClick={handleCardClick} />
-        </Box>
-      </Box>
+        </div>
+      </div>
       <ImageModal
         isOpen={isModalOpen}
         image={selectedImage}
         onClose={handleCloseModal}
       />
-    </Box>
+    </div>
   )
 }
 
