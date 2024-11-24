@@ -1,13 +1,15 @@
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from websocket import WebSocket
+from websocket import create_connection
 import json
 import uuid
 import urllib.request
 import io
 from PIL import Image
+import random
 
 # Constants
 SERVER_ADDRESS = "127.0.0.1:8188"
@@ -20,16 +22,53 @@ os.makedirs(IMAGES_FOLDER, exist_ok=True)
 # FastAPI instance
 app = FastAPI()
 
-class Prompt(BaseModel):
-    prompt_text: str
+# Allow CORS
+origins = [
+    "http://localhost:5173",  # Replace with your frontend's domain or port during development
+    "http://127.0.0.1:5173", # Common alternative for localhost
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # List of allowed origins
+    allow_credentials=True, # Allow cookies and credentials
+    allow_methods=["*"],    # Allow all HTTP methods
+    allow_headers=["*"],    # Allow all HTTP headers
+)
+
+
+# Request model
+class Prompt(BaseModel):
+    positive_clip: str
+    negative_clip: str
+
+# Queue the prompt with the backend server
 def queue_prompt(prompt):
     p = {"prompt": prompt, "client_id": CLIENT_ID}
     data = json.dumps(p).encode("utf-8")
     req = urllib.request.Request(f"http://{SERVER_ADDRESS}/prompt", data=data)
     return json.loads(urllib.request.urlopen(req).read())
 
-def get_images(ws, prompt):
+# Save the image to a folder
+def save_image(image_data, base_filename):
+    image = Image.open(io.BytesIO(image_data))
+    
+    # Ensure filename uniqueness by incrementing an index
+    index = 1
+    while True:
+        filename = f"{base_filename}_{index}.png"
+        file_path = os.path.join(IMAGES_FOLDER, filename)
+        if not os.path.exists(file_path):  # Break if file does not exist
+            break
+        index += 1
+    
+    # Save the image
+    image.save(file_path)
+    return file_path
+
+
+# WebSocket image retrieval
+def get_images_via_websocket(ws, prompt):
     prompt_id = queue_prompt(prompt)["prompt_id"]
     output_images = {}
     current_node = ""
@@ -42,7 +81,7 @@ def get_images(ws, prompt):
                 data = message["data"]
                 if data["prompt_id"] == prompt_id:
                     if data["node"] is None:
-                        break  # Execution is done
+                        break  # Execution is complete
                     else:
                         current_node = data["node"]
         else:
@@ -53,26 +92,88 @@ def get_images(ws, prompt):
 
     return output_images
 
-# Save the image to a folder
-def save_image(image_data, filename):
-    image = Image.open(io.BytesIO(image_data))
-    file_path = os.path.join(IMAGES_FOLDER, filename)
-    image.save(file_path)
-    return file_path
-
 @app.post("/generate-image/")
 async def generate_image(prompt: Prompt):
-    ws = WebSocket()
-    ws.connect(f"ws://{SERVER_ADDRESS}/ws?clientId={CLIENT_ID}")
+    # Build the prompt text dynamically
+    prompt_text = {
+        3: {
+            "class_type": "KSampler",
+            "inputs": {
+                "cfg": 8,
+                "denoise": 1,
+                "latent_image": ["5", 0],
+                "model": ["4", 0],
+                "negative": ["7", 0],
+                "positive": ["6", 0],
+                "sampler_name": "euler",
+                "scheduler": "normal",
+                "seed": random.randint(100000,999999),
+                "steps": 20,
+            },
+        },
+        4: {
+            "class_type": "CheckpointLoaderSimple",
+            "inputs": {
+                "ckpt_name": "noobaiXLNAIXL_vPred06Version.safetensors",
+            },
+        },
+        5: {
+            "class_type": "EmptyLatentImage",
+            "inputs": {
+                "batch_size": 1,
+                "height": 1216,
+                "width": 832,
+            },
+        },
+        6: {
+            "class_type": "CLIPTextEncode",
+            "inputs": {
+                "clip": ["4", 1],
+                "text": prompt.positive_clip,  # Use positive clip from the request
+            },
+        },
+        7: {
+            "class_type": "CLIPTextEncode",
+            "inputs": {
+                "clip": ["4", 1],
+                "text": prompt.negative_clip,  # Use negative clip from the request
+            },
+        },
+        8: {
+        "class_type": "VAEDecode",
+        "inputs": {
+            "samples": [
+                "3",
+                0
+            ],
+            "vae": [
+                "4",
+                2
+            ]
+        }
+    },
+    "save_image_websocket_node": {
+        "class_type": "SaveImageWebsocket",
+        "inputs": {
+            "images": [
+                "8",
+                0
+            ]
+          }
+      }
+  }
+
+    # Connect to WebSocket
+    ws = create_connection(f"ws://{SERVER_ADDRESS}/ws?clientId={CLIENT_ID}")
     
     # Generate images
-    images = get_images(ws, json.loads(prompt.prompt_text))
+    images = get_images_via_websocket(ws, prompt_text)
     ws.close()
     
     saved_files = []
     for node_id in images:
         for index, image_data in enumerate(images[node_id]):
-            filename = f"{node_id}_{index}.png"
+            filename = f"{node_id}"
             file_path = save_image(image_data, filename)
             saved_files.append(file_path)
     

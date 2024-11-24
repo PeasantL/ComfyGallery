@@ -1,91 +1,27 @@
-import { v4 as uuidv4 } from 'uuid'
-
-// Define server address and client ID
-const serverAddress = '127.0.0.1:8188'
-const clientId = uuidv4()
-
 const generateImage = async (positiveClip, negativeClip) => {
-  const promptText = {
-    3: {
-      class_type: 'KSampler',
-      inputs: {
-        cfg: 8,
-        denoise: 1,
-        latent_image: ['5', 0],
-        model: ['4', 0],
-        negative: ['7', 0],
-        positive: ['6', 0],
-        sampler_name: 'euler',
-        scheduler: 'normal',
-        seed: 85366257,
-        steps: 20,
-      },
-    },
-    4: {
-      class_type: 'CheckpointLoaderSimple',
-      inputs: {
-        ckpt_name: 'noobaiXLNAIXL_vPred06Version.safetensors',
-      },
-    },
-    5: {
-      class_type: 'EmptyLatentImage',
-      inputs: {
-        batch_size: 1,
-        height: 1216,
-        width: 832,
-      },
-    },
-    6: {
-      class_type: 'CLIPTextEncode',
-      inputs: {
-        clip: ['4', 1],
-        text: positiveClip, // Positive clip placeholder
-      },
-    },
-    7: {
-      class_type: 'CLIPTextEncode',
-      inputs: {
-        clip: ['4', 1],
-        text: negativeClip, // Negative clip placeholder
-      },
-    },
-    8: {
-      class_type: 'VAEDecode',
-      inputs: {
-        samples: ['3', 0],
-        vae: ['4', 2],
-      },
-    },
-    9: {
-      class_type: 'SaveImage',
-      inputs: {
-        filename_prefix: 'ComfyUI',
-        images: ['8', 0],
-      },
-    },
-  }
-
   try {
-    const response = await fetch(`http://${serverAddress}/prompt`, {
+    const response = await fetch('http://127.0.0.1:8000/generate-image/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prompt: promptText,
-        client_id: clientId,
+        positive_clip: positiveClip,
+        negative_clip: negativeClip,
       }),
     })
 
     if (!response.ok) {
-      console.error('Failed to send prompt:', response.statusText)
+      console.error('Failed to generate image:', response.statusText)
       return
     }
 
     const result = await response.json()
-    console.log('Prompt sent successfully:', result)
+    console.log('Image generated successfully:', result)
+
+    return result.saved_files // Return the list of saved file paths
   } catch (error) {
-    console.error('Error sending prompt:', error)
+    console.error('Error generating image:', error)
   }
 }
 
