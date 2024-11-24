@@ -17,7 +17,7 @@ const generateImage = async (positiveClip, negativeClip) => {
         positive: ['6', 0],
         sampler_name: 'euler',
         scheduler: 'normal',
-        seed: 8566257,
+        seed: 85366257,
         steps: 20,
       },
     },

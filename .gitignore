@@ -7,18 +7,18 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Dependency directories
-node_modules/
+frontend/node_modules/
 
 # Production build directory
-dist/
+frontend/dist/
 
 # Vite cache
-.vite
+frontend/.vite
 
 # Local environment files
-.env
-.env.local
-.env.*.local
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
 
 # Editor directories and files
 .vscode/
@@ -29,3 +29,14 @@ dist/
 # System files
 .DS_Store
 Thumbs.db
+
+# Python specific ignores (for backend)
+backend/__pycache__/
+backend/*.pyc
+backend/env/
+backend/.venv/
+
+# General
+*.bak
+*.tmp
+
