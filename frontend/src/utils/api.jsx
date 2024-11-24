@@ -15,5 +15,5 @@ export const fetchImages = async () => {
 }
 
 export const getImageUrl = (filename) => {
-  return `${API_BASE_URL}/images/${filename}`
+  return `${API_BASE_URL}/images/${encodeURIComponent(filename)}`
 }

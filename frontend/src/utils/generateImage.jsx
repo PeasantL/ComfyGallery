@@ -1,3 +1,5 @@
+// generateImage.js
+
 const generateImage = async (positiveClip, negativeClip) => {
   try {
     const response = await fetch('http://127.0.0.1:8000/generate-image/', {
@@ -12,16 +14,16 @@ const generateImage = async (positiveClip, negativeClip) => {
     })
 
     if (!response.ok) {
-      console.error('Failed to generate image:', response.statusText)
-      return
+      throw new Error(`Failed to generate image: ${response.statusText}`)
     }
 
     const result = await response.json()
     console.log('Image generated successfully:', result)
 
-    return result.saved_files // Return the list of saved file paths
+    return result.saved_files // Ensure this returns an array of filenames
   } catch (error) {
     console.error('Error generating image:', error)
+    throw error // Re-throw the error to be caught in handleGenerate
   }
 }
 

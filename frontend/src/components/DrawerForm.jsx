@@ -1,51 +1,100 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Typography, Button, Drawer, Stack, Divider } from '@mui/material'
 import PropTypes from 'prop-types'
 import '../styles/DrawerForm.css'
 import DrawerFormTagAuto from './DrawerFormTagAuto'
 import generateImage from '../utils/generateImage'
 
-const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
-  // State variables for each set of tags
-  const [participantTags, setParticipantTags] = useState(['1girl'])
-  const [characterTags, setCharacterTags] = useState([])
-  const [artistTags, setArtistTags] = useState([])
-  const [generalTags, setGeneralTags] = useState([])
-  const [qualityTags, setQualityTags] = useState([
-    'masterpiece',
-    'best quality',
-    'newest',
-    'absurdres',
-    'highres',
-    'very awa',
-  ])
-  const [defaultNegativeTags, setDefaultNegativeTags] = useState([
-    'worst quality',
-    'old',
-    'early',
-    'low quality',
-    'lowres',
-    'signature',
-    'username',
-    'logo',
-    'bad hands',
-    'mutated hands',
-    'mammal',
-    'anthro',
-    'furry',
-    'ambiguous form',
-    'feral',
-    'semi-anthro',
-  ])
-  const [additionalNegativeTags, setAdditionalNegativeTags] = useState([])
+const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
+  // Utility function to get data from localStorage
+  const getStoredTags = (key, defaultValue) =>
+    JSON.parse(localStorage.getItem(key)) || defaultValue
 
-  // State variables to store the generated clips
+  // State variables with localStorage persistence
+  const [participantTags, setParticipantTags] = useState(
+    getStoredTags('participantTags', ['1girl'])
+  )
+  const [characterTags, setCharacterTags] = useState(
+    getStoredTags('characterTags', [])
+  )
+  const [artistTags, setArtistTags] = useState(getStoredTags('artistTags', []))
+  const [generalTags, setGeneralTags] = useState(
+    getStoredTags('generalTags', [])
+  )
+  const [qualityTags, setQualityTags] = useState(
+    getStoredTags('qualityTags', [
+      'masterpiece',
+      'best quality',
+      'newest',
+      'absurdres',
+      'highres',
+      'very awa',
+    ])
+  )
+  const [defaultNegativeTags, setDefaultNegativeTags] = useState(
+    getStoredTags('defaultNegativeTags', [
+      'worst quality',
+      'old',
+      'early',
+      'low quality',
+      'lowres',
+      'signature',
+      'username',
+      'logo',
+      'bad hands',
+      'mutated hands',
+      'mammal',
+      'anthro',
+      'furry',
+      'ambiguous form',
+      'feral',
+      'semi-anthro',
+    ])
+  )
+  const [additionalNegativeTags, setAdditionalNegativeTags] = useState(
+    getStoredTags('additionalNegativeTags', [])
+  )
+
   const [positiveClip, setPositiveClip] = useState('')
   const [negativeClip, setNegativeClip] = useState('')
 
+  // Save state to localStorage whenever it updates
+  useEffect(() => {
+    localStorage.setItem('participantTags', JSON.stringify(participantTags))
+  }, [participantTags])
+
+  useEffect(() => {
+    localStorage.setItem('characterTags', JSON.stringify(characterTags))
+  }, [characterTags])
+
+  useEffect(() => {
+    localStorage.setItem('artistTags', JSON.stringify(artistTags))
+  }, [artistTags])
+
+  useEffect(() => {
+    localStorage.setItem('generalTags', JSON.stringify(generalTags))
+  }, [generalTags])
+
+  useEffect(() => {
+    localStorage.setItem('qualityTags', JSON.stringify(qualityTags))
+  }, [qualityTags])
+
+  useEffect(() => {
+    localStorage.setItem(
+      'defaultNegativeTags',
+      JSON.stringify(defaultNegativeTags)
+    )
+  }, [defaultNegativeTags])
+
+  useEffect(() => {
+    localStorage.setItem(
+      'additionalNegativeTags',
+      JSON.stringify(additionalNegativeTags)
+    )
+  }, [additionalNegativeTags])
+
   // Function to handle Generate button click
-  const handleGenerate = () => {
-    // Combine positive tags
+  const handleGenerate = async () => {
     const positiveTags = [
       ...participantTags,
       ...characterTags,
@@ -55,16 +104,34 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
     ]
     const positiveClipString = positiveTags.join(', ')
 
-    // Combine negative tags
     const negativeTags = [...defaultNegativeTags, ...additionalNegativeTags]
     const negativeClipString = negativeTags.join(', ')
 
-    // Update the state with the new clips
     setPositiveClip(positiveClipString)
     setNegativeClip(negativeClipString)
 
-    // Send data to the generateImage function
-    generateImage(positiveClipString, negativeClipString)
+    try {
+      const savedFiles = await generateImage(
+        positiveClipString,
+        negativeClipString
+      )
+      console.log('Image generated successfully:', savedFiles)
+
+      if (savedFiles && savedFiles.length > 0) {
+        savedFiles.forEach((filepath) => {
+          console.log('Saved file path:', filepath) // Log the filepath
+          // Remove './images/' from the beginning if present
+          const filename = filepath.startsWith('./images/')
+            ? filepath.substring('./images/'.length)
+            : filepath.replace(/^.*[\\\/]/, '')
+          addImage(filename)
+        })
+      } else {
+        console.error('No saved files returned from generateImage')
+      }
+    } catch (error) {
+      console.error('Error generating image:', error)
+    }
   }
 
   return (
@@ -105,7 +172,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
           />
 
           <DrawerFormTagAuto
-            variableFile="src/assets/danbooru-tags.json"
+            variableFile="src/assets/char.json"
             label="Character, Series"
             placeholder="Ganyu"
             tags={characterTags}
@@ -113,7 +180,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
           />
 
           <DrawerFormTagAuto
-            variableFile="src/assets/danbooru-tags.json"
+            variableFile="src/assets/artist.json"
             label="Artist"
             placeholder="nyatcha"
             tags={artistTags}
@@ -174,7 +241,6 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
         {/* Display the generated clips */}
         {positiveClip && (
           <Box sx={{ marginTop: 2 }}>
-            Po
             <Typography variant="h6">Positive Clip:</Typography>
             <Typography variant="body1">{positiveClip}</Typography>
           </Box>
@@ -193,6 +259,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
 DrawerForm.propTypes = {
   isDrawerOpen: PropTypes.bool.isRequired,
   drawerWidth: PropTypes.number.isRequired,
+  addImage: PropTypes.func.isRequired,
 }
 
 export default DrawerForm

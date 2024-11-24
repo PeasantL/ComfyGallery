@@ -4,7 +4,7 @@ import AppBar from './components/AppBar'
 import DrawerForm from './components/DrawerForm'
 import ImageCatalog from './components/ImageCatalog'
 import ImageModal from './components/ImageModal'
-import { fetchImages, getImageUrl } from './utils/api'
+import { useImages } from './utils/image'
 
 const drawerWidth = 300
 
@@ -12,21 +12,11 @@ const App = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [isModalOpen, setModalOpen] = useState(false)
-  const [images, setImages] = useState([])
+  const { images, loadImages, addImage } = useImages()
 
   useEffect(() => {
-    const loadImages = async () => {
-      const imageFiles = await fetchImages()
-      const imageList = imageFiles.map((filename, index) => ({
-        id: index + 1, // Assign unique IDs
-        title: filename, // Use filename as the title
-        src: getImageUrl(filename), // Generate full URL for the image
-      }))
-      setImages(imageList)
-    }
-
-    loadImages()
-  }, [])
+    loadImages() // Load images on component mount
+  }, [loadImages])
 
   const handleCardClick = (image) => {
     setSelectedImage(image)
@@ -41,7 +31,11 @@ const App = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <AppBar toggleDrawer={() => setDrawerOpen(!isDrawerOpen)} />
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        <DrawerForm isDrawerOpen={isDrawerOpen} drawerWidth={drawerWidth} />
+        <DrawerForm
+          isDrawerOpen={isDrawerOpen}
+          drawerWidth={drawerWidth}
+          addImage={addImage} // Pass addImage as a prop
+        />
         <Box
           component="main"
           sx={{
