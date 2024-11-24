@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Typography, Button, Drawer, Stack, Divider } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Button,
+  Drawer,
+  Stack,
+  Divider,
+  CircularProgress,
+} from '@mui/material'
 import PropTypes from 'prop-types'
 import '../styles/DrawerForm.css'
 import DrawerFormTagAuto from './DrawerFormTagAuto'
@@ -58,6 +66,9 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
   const [positiveClip, setPositiveClip] = useState('')
   const [negativeClip, setNegativeClip] = useState('')
 
+  // Loading state for the button
+  const [loading, setLoading] = useState(false)
+
   // Save state to localStorage whenever it updates
   useEffect(() => {
     localStorage.setItem('participantTags', JSON.stringify(participantTags))
@@ -95,6 +106,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
 
   // Function to handle Generate button click
   const handleGenerate = async () => {
+    setLoading(true) // Start loading
     const positiveTags = [
       ...participantTags,
       ...characterTags,
@@ -131,6 +143,8 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       }
     } catch (error) {
       console.error('Error generating image:', error)
+    } finally {
+      setLoading(false) // End loading
     }
   }
 
@@ -229,14 +243,30 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
         </Stack>
 
         <Divider sx={{ borderColor: '#555', marginBottom: 2 }} />
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleGenerate}
-        >
-          Generate
-        </Button>
+        <Box sx={{ position: 'relative' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={handleGenerate}
+            disabled={loading}
+          >
+            Generate
+          </Button>
+          {loading && (
+            <CircularProgress
+              size={24}
+              sx={{
+                color: '#fff',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                marginTop: '-12px',
+                marginLeft: '-12px',
+              }}
+            />
+          )}
+        </Box>
 
         {/* Display the generated clips */}
         {positiveClip && (

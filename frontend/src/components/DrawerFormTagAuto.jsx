@@ -13,17 +13,6 @@ const DrawerFormTagAuto = ({
   const [options, setOptions] = useState([])
   const [inputValue, setInputValue] = useState('') // Controlled input value
 
-  const handleKeyDown = (event) => {
-    if (event.key === ' ') {
-      event.preventDefault()
-      const trimmedValue = inputValue.trim()
-      if (trimmedValue && !tags.includes(trimmedValue)) {
-        setTags([...tags, trimmedValue])
-        setInputValue('')
-      }
-    }
-  }
-
   useEffect(() => {
     const loadTags = async () => {
       if (!variableFile) {
@@ -78,7 +67,6 @@ const DrawerFormTagAuto = ({
             multiline
             label={label}
             placeholder={tags.length === 0 ? placeholder : ''} // Hide placeholder if there are tags
-            onKeyDown={handleKeyDown}
           />
         )}
       />
