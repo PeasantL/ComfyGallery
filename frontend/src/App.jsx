@@ -18,6 +18,16 @@ const App = () => {
     loadImages() // Load images on component mount
   }, [loadImages])
 
+  useEffect(() => {
+    const handleResize = () => {
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+    }
+    window.addEventListener('resize', handleResize)
+    handleResize()
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const handleCardClick = (image) => {
     setSelectedImage(image)
     setModalOpen(true)
@@ -28,13 +38,13 @@ const App = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <AppBar toggleDrawer={() => setDrawerOpen(!isDrawerOpen)} />
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
         <DrawerForm
           isDrawerOpen={isDrawerOpen}
           drawerWidth={drawerWidth}
-          addImage={addImage} // Pass addImage as a prop
+          addImage={addImage}
         />
         <Box
           component="main"

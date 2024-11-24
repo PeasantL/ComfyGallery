@@ -156,15 +156,23 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       sx={{
         '& .MuiDrawer-paper': {
           width: drawerWidth,
-          position: 'fixed',
           top: '64px',
-          height: 'calc(100vh - 64px)',
+          bottom: 0,
           backgroundColor: '#333',
           color: '#fff',
+          // Remove position: 'fixed' and top/bottom properties
         },
       }}
     >
-      <Box className="drawer-form">
+      <Box
+        className="drawer-form"
+        sx={{
+          height: 'calc(100% - 64px)',
+          overflowY: 'auto',
+          padding: '16px',
+          WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
+        }}
+      >
         <Typography variant="h5" gutterBottom>
           Prompt
         </Typography>

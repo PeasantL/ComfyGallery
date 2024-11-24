@@ -10,6 +10,7 @@ import urllib.request
 import io
 from PIL import Image
 import random
+import uvicorn
 
 # Constants
 SERVER_ADDRESS = "127.0.0.1:8188"
@@ -22,15 +23,9 @@ os.makedirs(IMAGES_FOLDER, exist_ok=True)
 # FastAPI instance
 app = FastAPI()
 
-# Allow CORS
-origins = [
-    "http://localhost:5173",  # Replace with your frontend's domain or port during development
-    "http://127.0.0.1:5173", # Common alternative for localhost
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # List of allowed origins
+    allow_origins=['*'],  # List of allowed origins
     allow_credentials=True, # Allow cookies and credentials
     allow_methods=["*"],    # Allow all HTTP methods
     allow_headers=["*"],    # Allow all HTTP headers
@@ -378,3 +373,6 @@ def get_image(filename: str):
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Image not found")
     return FileResponse(file_path)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)  # Listen on all interfaces

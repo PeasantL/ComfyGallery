@@ -1,8 +1,6 @@
-const API_BASE_URL = 'http://127.0.0.1:8000'
-
 export const fetchImages = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/images/`)
+    const response = await fetch('/api/images/')
     if (!response.ok) {
       throw new Error('Failed to fetch images')
     }
@@ -15,5 +13,5 @@ export const fetchImages = async () => {
 }
 
 export const getImageUrl = (filename) => {
-  return `${API_BASE_URL}/images/${encodeURIComponent(filename)}`
+  return `api/images/${encodeURIComponent(filename)}`
 }

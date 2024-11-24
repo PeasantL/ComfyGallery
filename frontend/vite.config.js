@@ -1,15 +1,16 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: true, // Ensure Vite is accessible on the local network
+    port: 3000,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8000', // Python backend URL
+        target: 'http://192.168.0.107:8000', // Replace with your backend's local IP
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Optional: Removes the `/api` prefix
+        rewrite: (path) => path.replace(/^\/api/, ''), // Optional: Rewrite the path if necessary
       },
     },
   },
