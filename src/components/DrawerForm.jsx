@@ -3,6 +3,7 @@ import { Box, Typography, Button, Drawer, Stack, Divider } from '@mui/material'
 import PropTypes from 'prop-types'
 import '../styles/DrawerForm.css'
 import DrawerFormTagAuto from './DrawerFormTagAuto'
+import generateImage from '../utils/generateImage'
 
 const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
   // State variables for each set of tags
@@ -62,8 +63,8 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
     setPositiveClip(positiveClipString)
     setNegativeClip(negativeClipString)
 
-    // You can use these strings as needed, for example:
-    // Send them to an API, update state, display them, etc.
+    // Send data to the generateImage function
+    generateImage(positiveClipString, negativeClipString)
   }
 
   return (
@@ -173,6 +174,7 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth }) => {
         {/* Display the generated clips */}
         {positiveClip && (
           <Box sx={{ marginTop: 2 }}>
+            Po
             <Typography variant="h6">Positive Clip:</Typography>
             <Typography variant="body1">{positiveClip}</Typography>
           </Box>
