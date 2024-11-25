@@ -6,8 +6,8 @@ const DrawerFormTagAuto = ({
   variableFile,
   label,
   placeholder,
-  tags, // Use tags from props
-  setTags, // Use setTags from props
+  tags,
+  setTags,
   hideTags = false,
 }) => {
   const [options, setOptions] = useState([])
@@ -23,7 +23,9 @@ const DrawerFormTagAuto = ({
       try {
         const response = await fetch(variableFile)
         const data = await response.json()
-        setOptions(data) // Assuming the JSON is an array of strings
+        // Sort options by count in descending order
+        const sortedOptions = data.sort((a, b) => b.count - a.count)
+        setOptions(sortedOptions)
       } catch (error) {
         console.error('Error loading tags:', error)
         setOptions([]) // Fallback to empty options in case of error
@@ -34,7 +36,7 @@ const DrawerFormTagAuto = ({
 
   const filterOptions = (options, { inputValue }) => {
     const filtered = options.filter((option) =>
-      option.toLowerCase().includes(inputValue.toLowerCase())
+      option.tag.toLowerCase().includes(inputValue.toLowerCase())
     )
     return filtered.slice(0, 10)
   }
@@ -45,9 +47,11 @@ const DrawerFormTagAuto = ({
         {...(hideTags ? { limitTags: 1 } : {})} // Conditionally include limitTags
         multiple
         id="tags-filled"
-        options={options}
+        options={options.map((option) => option.tag)} // Pass only `tag` strings to options
         freeSolo
-        filterOptions={filterOptions}
+        filterOptions={(opts, state) =>
+          filterOptions(options, state).map((opt) => opt.tag)
+        }
         value={tags}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
@@ -78,7 +82,7 @@ DrawerFormTagAuto.propTypes = {
   variableFile: PropTypes.string,
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired, // Ensure `tags` is an array of strings
   setTags: PropTypes.func.isRequired,
   hideTags: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
 }
