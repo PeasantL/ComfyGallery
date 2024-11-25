@@ -157,7 +157,7 @@
       "guide_size_for": true,
       "max_size": 1024,
       "seed": 4004121362113,
-      "steps": 28,
+      "steps": 20,
       "cfg": 5,
       "sampler_name": "euler",
       "scheduler": "normal",
