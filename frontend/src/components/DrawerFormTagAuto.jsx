@@ -68,7 +68,6 @@ const DrawerFormTagAuto = ({
           <TextField
             {...params}
             variant="filled"
-            multiline
             label={label}
             placeholder={tags.length === 0 ? placeholder : ''} // Hide placeholder if there are tags
           />
