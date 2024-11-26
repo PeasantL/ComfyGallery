@@ -13,6 +13,6 @@
   justify-content: flex-start;
   align-items: center;
   background-color: #222;
-  z-index: 1201;
+  z-index: 1400; /* Set z-index higher than the modal */
   border-bottom: 1px solid #444;
 }
