@@ -50,7 +50,7 @@ const TAG_DEFAULTS = {
 const getStoredTags = (key, defaultValue) =>
   JSON.parse(localStorage.getItem(key)) || defaultValue
 
-const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
+const DrawerForm = ({ isDrawerOpen, addImage }) => {
   // State variables with default values
   const [tags, setTags] = useState(() =>
     Object.keys(TAG_DEFAULTS).reduce((acc, key) => {

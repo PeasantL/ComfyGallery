@@ -6,8 +6,6 @@ import ImageCatalog from './components/ImageCatalog'
 import ImageModal from './components/ImageModal'
 import { useImages } from './utils/useImages'
 
-const drawerWidth = 350
-
 const App = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
@@ -61,11 +59,7 @@ const App = () => {
         handleDelete={isModalOpen ? () => deleteImage(selectedImage) : null}
       />
       <div className="App__content">
-        <DrawerForm
-          isDrawerOpen={isDrawerOpen}
-          drawerWidth={drawerWidth}
-          addImage={addImage}
-        />
+        <DrawerForm isDrawerOpen={isDrawerOpen} addImage={addImage} />
         <div
           className={`App__main ${
             isDrawerOpen ? 'App__main--drawer-open' : ''
