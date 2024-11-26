@@ -6,13 +6,21 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
   height: 100%;
   width: var(--app-bar-width);
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center; /* Centers the Stack vertically */
+  align-items: center; /* Ensures horizontal centering */
   background-color: #222;
-  z-index: 1400; /* Set z-index higher than the modal */
-  border-bottom: 1px solid #444;
+  z-index: 1400;
+  border-right: 1px solid #444; /* Adjusted for vertical bar style */
+}
+
+.app-bar-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align items from the top */
+  align-items: center; /* Keep icons horizontally centered */
+  height: 0%; /* Stack takes full height of the app bar */
+  gap: 16px; /* Add consistent spacing between icons */
 }

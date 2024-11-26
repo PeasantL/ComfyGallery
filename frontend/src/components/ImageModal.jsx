@@ -1,4 +1,5 @@
-import { Modal, Box } from '@mui/material'
+import Modal from '@mui/material/Modal'
+import Box from '@mui/material/Box'
 import PropTypes from 'prop-types'
 import '../styles/ImageModal.css'
 

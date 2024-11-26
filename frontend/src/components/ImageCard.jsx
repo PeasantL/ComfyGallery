@@ -1,4 +1,7 @@
-import { Card, CardMedia, CardContent, Typography } from '@mui/material'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
 import '../styles/ImageCard.css'
 

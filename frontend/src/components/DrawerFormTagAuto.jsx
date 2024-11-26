@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import Autocomplete from '@mui/material/Autocomplete'
+import Chip from '@mui/material/Chip'
+import TextField from '@mui/material/TextField'
+import Stack from '@mui/material/Stack'
 import PropTypes from 'prop-types'
-import { Autocomplete, Chip, TextField, Stack } from '@mui/material'
 
 const DrawerFormTagAuto = ({
   variableFile,
