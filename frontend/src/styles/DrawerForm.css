@@ -1,3 +1,7 @@
+:root {
+  --drawer-width: 350px;
+}
+
 .drawer-form {
   padding: 16px;
   overflow-y: auto;
@@ -40,4 +44,5 @@
   bottom: 0;
   background-color: #333;
   color: #fff;
+  width: var(--drawer-width);
 }

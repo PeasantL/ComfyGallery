@@ -1,10 +1,14 @@
+:root {
+  --app-bar-width: 42px;
+}
+
 .app-bar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 100%;
-  width: 42px;
+  width: var(--app-bar-width);
   display: flex;
   justify-content: flex-start;
   align-items: center;

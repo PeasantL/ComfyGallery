@@ -23,12 +23,14 @@ body {
 .App__main {
   flex-grow: 1;
   padding: 16px;
-  margin-left: 0px;
+  margin-left: var(--app-bar-width);
   transition: margin-left 0.3s ease;
   background-color: #121212;
   color: #fff;
 }
 
 .App__main--drawer-open {
-  margin-left: 300px; /* Match drawer width */
+  margin-left: calc(
+    var(--drawer-width) + var(--app-bar-width)
+  ); /* Match drawer width */
 }

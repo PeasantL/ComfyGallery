@@ -35,6 +35,7 @@ const App = () => {
 
   const handleCloseModal = () => {
     setModalOpen(false)
+    setSelectedImage(null) // Unload the image when the modal is closed
   }
 
   return (

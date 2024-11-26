@@ -132,11 +132,6 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
       anchor="left"
       open={isDrawerOpen}
       classes={{ paper: 'drawer-paper' }}
-      PaperProps={{
-        style: {
-          width: drawerWidth,
-        },
-      }}
     >
       <Box className="drawer-form">
         <Typography variant="h5" gutterBottom>
