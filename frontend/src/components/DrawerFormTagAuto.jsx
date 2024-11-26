@@ -35,10 +35,10 @@ const DrawerFormTagAuto = ({
   }, [variableFile])
 
   const filterOptions = (options, { inputValue }) => {
-    const filtered = options.filter((option) =>
-      option.tag.toLowerCase().includes(inputValue.toLowerCase())
-    )
-    return filtered.slice(0, 10)
+    const normalizedInput = inputValue.trim().toLowerCase() // Normalize input by trimming spaces and converting to lowercase
+    return options
+      .filter((option) => option.tag.toLowerCase().includes(normalizedInput))
+      .slice(0, 10) // Limit to top 10 results
   }
 
   return (
