@@ -4,7 +4,7 @@ import AppBar from './components/AppBar'
 import DrawerForm from './components/DrawerForm'
 import ImageCatalog from './components/ImageCatalog'
 import ImageModal from './components/ImageModal'
-import { useImages } from './utils/image'
+import { useImages } from './utils/useImages'
 
 const drawerWidth = 350
 

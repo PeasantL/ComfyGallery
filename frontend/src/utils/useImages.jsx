@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { fetchImages } from './api'
+import { fetchImages } from './fetchImages'
 
 export const useImages = () => {
   const [images, setImages] = useState([])
