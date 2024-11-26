@@ -36,6 +36,7 @@ backend/*.pyc
 backend/env/
 backend/.venv/
 backend/images/
+backend/thumbnails/
 
 # General
 *.bak

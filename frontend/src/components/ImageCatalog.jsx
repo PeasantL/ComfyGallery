@@ -15,7 +15,7 @@ const ImageCatalog = ({ images, handleCardClick }) => (
         display="flex"
         justifyContent="center"
       >
-        <ImageCard image={image} onClick={handleCardClick} />
+        <ImageCard image={image} onClick={() => handleCardClick(image)} />
       </Grid2>
     ))}
   </Grid2>
@@ -25,8 +25,8 @@ ImageCatalog.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-      src: PropTypes.string.isRequired,
+      original: PropTypes.string.isRequired,
+      thumbnail: PropTypes.string.isRequired,
     })
   ).isRequired,
   handleCardClick: PropTypes.func.isRequired,

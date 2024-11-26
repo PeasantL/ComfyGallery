@@ -1,31 +1,30 @@
-// utils/images.js
 import { useState, useCallback } from 'react'
-import { fetchImages, getImageUrl } from './api'
+import { fetchImages } from './api'
 
 export const useImages = () => {
   const [images, setImages] = useState([])
 
   const loadImages = useCallback(async () => {
-    const imageFiles = await fetchImages()
-    const imageList = imageFiles.map((filename, index) => ({
+    // Fetch images from the API
+    const imageFiles = await fetchImages() // Call your `/api/images/` endpoint
+    const imageList = imageFiles.map((file, index) => ({
       id: index + 1,
-      title: filename,
-      src: getImageUrl(filename),
+      original: file.original, // URL for the full image
+      thumbnail: file.thumbnail, // URL for the thumbnail
+      title: file.title, // Include the title
     }))
     setImages(imageList)
   }, [])
 
-  // Add this function to add a new image to the state
   const addImage = (filename) => {
-    const filename_wo_path = filename.replace(/^.*[\\\/]/, '')
-    setImages((prevImages) => {
-      const newImage = {
-        id: prevImages.length + 1,
-        title: filename_wo_path,
-        src: getImageUrl(filename),
-      }
-      return [...prevImages, newImage]
-    })
+    const title = filename.split('.')[0] // Extract title by removing the file extension
+    const newImage = {
+      id: images.length + 1,
+      original: `api/images/${filename}`, // Adjust paths to match your server setup
+      thumbnail: `api/thumb/${filename}`,
+      title,
+    }
+    setImages((prevImages) => [...prevImages, newImage])
   }
 
   return { images, loadImages, addImage }

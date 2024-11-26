@@ -108,13 +108,12 @@ const DrawerForm = ({ isDrawerOpen, drawerWidth, addImage }) => {
         tags.characterTags,
         tags.artistTags
       )
-      console.log('Image generated successfully:', savedFiles)
 
       if (savedFiles?.length > 0) {
         savedFiles.forEach((filepath) => {
-          const filename = filepath.startsWith('./images/')
-            ? filepath.substring('./images/'.length)
-            : filepath.replace(/^.*[\\\/]/, '')
+          const filename = filepath.original.startsWith('./images/')
+            ? filepath.original.substring('./images/'.length)
+            : filepath.original.replace(/^.*[\\\/]/, '')
           addImage(filename)
         })
       } else {

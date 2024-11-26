@@ -44,12 +44,15 @@ def sanitize_filename(filename: str) -> str:
     max_length = 255
     return sanitized[:max_length]
 
+THUMBNAILS_FOLDER = "./thumbnails"
+os.makedirs(THUMBNAILS_FOLDER, exist_ok=True)
+
 def save_image(image_data, base_filename, character, artist):
-    """Save the image to the folder, avoiding filename collisions."""
+    """Save the image and generate a thumbnail."""
     index = 1
     image = Image.open(io.BytesIO(image_data))
     
-    # Create a unique filename
+    # Create a unique filename for the original image
     while True:
         filename = f"{character}_{artist}_{index}.png"
         sanitized_filename = sanitize_filename(filename)
@@ -58,9 +61,19 @@ def save_image(image_data, base_filename, character, artist):
             break
         index += 1
 
-    # Save the image
+    # Save the original image
     image.save(file_path)
-    return file_path
+
+    # Generate and save a thumbnail
+    thumbnail_size = (350, 350)  # Adjust thumbnail size as needed
+    thumbnail_filename = f"{character}_{artist}_{index}.png"
+    sanitized_thumbnail_filename = sanitize_filename(thumbnail_filename)
+    thumbnail_path = os.path.join(THUMBNAILS_FOLDER, sanitized_thumbnail_filename)
+    image.thumbnail(thumbnail_size)
+    image.save(thumbnail_path)
+
+    return {"original": file_path, "thumbnail": thumbnail_path}
+
 
 def queue_prompt(prompt):
     """Send the prompt to the backend server."""
@@ -90,6 +103,14 @@ def get_images_via_websocket(ws, prompt):
 
     return output_images
 
+@app.get("/thumb/{filename}")
+def get_thumbnail(filename: str):
+    """Serve a specific thumbnail."""
+    file_path = os.path.join(THUMBNAILS_FOLDER, filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Thumbnail not found")
+    return FileResponse(file_path)
+
 @app.post("/generate-image/")
 async def generate_image(prompt: Prompt):
     """Generate an image based on the given prompt."""
@@ -113,15 +134,31 @@ async def generate_image(prompt: Prompt):
         for image_data in image_data_list:
             character = prompt.character_tags[0].split(",")[0] if prompt.character_tags else "char"
             artist = prompt.artist_tags[0] if prompt.artist_tags else "artist"
-            file_path = save_image(image_data, node_id, character, artist)
-            saved_files.append(file_path)
+            paths = save_image(image_data, node_id, character, artist)
+            saved_files.append({
+                "original": f"/images/{os.path.basename(paths['original'])}",
+                "thumbnail": f"/thumb/{os.path.basename(paths['thumbnail'])}",
+                "title": f"{os.path.basename(paths['original'])}"
+            }) #this can be srunt to just the basename
 
     return {"saved_files": saved_files}
 
+
 @app.get("/images/")
 def list_images():
-    """List all images in the folder."""
-    return {"images": os.listdir(IMAGES_FOLDER)}
+    """List all images and their thumbnails."""
+    images = []
+    for filename in os.listdir(IMAGES_FOLDER):
+        if filename.endswith(".png"):  # Only include PNG files
+            thumbnail_filename = filename
+            thumbnail_path = os.path.join(THUMBNAILS_FOLDER, thumbnail_filename)
+            images.append({
+                "original": f"/images/{filename}",
+                "thumbnail": f"/thumb/{thumbnail_filename}" if os.path.exists(thumbnail_path) else None,
+                "title": filename.split(".")[0]
+            })
+    return {"images": images}
+
 
 @app.get("/images/{filename}")
 def get_image(filename: str):

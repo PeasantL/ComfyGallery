@@ -23,7 +23,6 @@ const generateImage = async (
     }
 
     const result = await response.json()
-    console.log('Image generated successfully:', result)
 
     return result.saved_files // Ensure this returns an array of filenames
   } catch (error) {

@@ -7,7 +7,11 @@ const ImageModal = ({ isOpen, image = null, onClose }) => (
     <Box className="image-modal-content" onClick={onClose}>
       {image && (
         <>
-          <img src={image.src} alt={image.title} className="image-modal-img" />
+          <img
+            src={image.original}
+            alt={image.title}
+            className="image-modal-img"
+          />
         </>
       )}
     </Box>
