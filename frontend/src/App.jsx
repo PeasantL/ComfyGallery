@@ -38,9 +38,28 @@ const App = () => {
     setSelectedImage(null) // Unload the image when the modal is closed
   }
 
+  const deleteImage = async (image) => {
+    if (!image) return
+
+    try {
+      const response = await fetch(`api/images/${image.title}.png`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) throw new Error('Failed to delete image')
+      loadImages() // Reload the images after deletion
+      setModalOpen(false) // Close the modal
+      setSelectedImage(null) // Clear the selected image
+    } catch (error) {
+      console.error('Error deleting image:', error)
+    }
+  }
+
   return (
     <div className="App">
-      <AppBar toggleDrawer={() => setDrawerOpen(!isDrawerOpen)} />
+      <AppBar
+        toggleDrawer={() => setDrawerOpen(!isDrawerOpen)}
+        handleDelete={isModalOpen ? () => deleteImage(selectedImage) : null}
+      />
       <div className="App__content">
         <DrawerForm
           isDrawerOpen={isDrawerOpen}

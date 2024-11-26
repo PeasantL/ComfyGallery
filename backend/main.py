@@ -11,6 +11,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from websocket import create_connection
+from fastapi.responses import JSONResponse
 
 # Constants
 SERVER_ADDRESS = "127.0.0.1:8188"
@@ -167,6 +168,30 @@ def get_image(filename: str):
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Image not found")
     return FileResponse(file_path)
+
+@app.delete("/images/{filename}")
+def delete_image(filename: str):
+    """Delete a specific image and its thumbnail."""
+    image_path = os.path.join(IMAGES_FOLDER, filename)
+    thumbnail_path = os.path.join(THUMBNAILS_FOLDER, filename)
+
+    if not os.path.exists(image_path):
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    # Delete the image
+    try:
+        os.remove(image_path)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")
+
+    # Delete the thumbnail if it exists
+    if os.path.exists(thumbnail_path):
+        try:
+            os.remove(thumbnail_path)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to delete thumbnail: {str(e)}")
+
+    return JSONResponse(content={"message": "Image and thumbnail deleted successfully"})
 
 import subprocess
 
