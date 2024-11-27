@@ -24,10 +24,10 @@ const generateImage = async (
 
     const result = await response.json()
 
-    return result.saved_files // Ensure this returns an array of filenames
+    return result.titles // Updated to return only the list of titles
   } catch (error) {
     console.error('Error generating image:', error)
-    throw error // Re-throw the error to be caught in handleGenerate
+    throw error
   }
 }
 

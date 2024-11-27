@@ -106,22 +106,19 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
     setNegativeClip(negativeClipString)
 
     try {
-      const savedFiles = await generateImage(
+      const titles = await generateImage(
         positiveClipString,
         negativeClipString,
         tags.characterTags,
         tags.artistTags
       )
 
-      if (savedFiles?.length > 0) {
-        savedFiles.forEach((filepath) => {
-          const filename = filepath.original.startsWith('./images/')
-            ? filepath.original.substring('./images/'.length)
-            : filepath.original.replace(/^.*[\\\/]/, '')
-          addImage(filename)
+      if (titles?.length > 0) {
+        titles.forEach((title) => {
+          addImage(title) // Assuming addImage handles only the title
         })
       } else {
-        console.error('No saved files returned from generateImage')
+        console.error('No titles returned from generateImage')
       }
     } catch (error) {
       console.error('Error generating image:', error)

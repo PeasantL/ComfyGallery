@@ -174,19 +174,17 @@ async def generate_image(prompt: Prompt):
     images = get_images_via_websocket(ws, prompt_text)
     ws.close()
 
-    saved_files = []
+    titles = []
     for node_id, image_data_list in images.items():
         for image_data in image_data_list:
             character = prompt.character_tags[0].split(",")[0] if prompt.character_tags else "char"
             artist = prompt.artist_tags[0] if prompt.artist_tags else "artist"
             paths = save_image(image_data, node_id, character, artist)
-            saved_files.append({
-                "original": f"/images/{os.path.basename(paths['original'])}",
-                "thumbnail": f"/thumb/{os.path.basename(paths['thumbnail'])}",
-                "title": f"{os.path.basename(paths['original'])}"
-            }) #this can be srunt to just the basename
+            title = os.path.basename(paths["original"])
+            titles.append(title)
 
-    return {"saved_files": saved_files}
+    return {"titles": titles}
+
 
 
 @app.get("/images/")
