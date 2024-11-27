@@ -12,9 +12,9 @@ import IconButton from '@mui/material/IconButton'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import PropTypes from 'prop-types'
 import '../../styles/DrawerForm.css'
-import DrawerFormTagAuto from './DrawerGenAutoForm'
+import DrawerFormTagAuto from '../DrawerTagAutoForm'
 import generateImage from '../../utils/generateImage'
-import { API_ENDPOINTS, TAG_DEFAULTS } from './constants'
+import { API_ENDPOINTS, TAG_DEFAULTS } from '../../utils/constants'
 import {
   getStoredTags,
   saveToLocalStorage,

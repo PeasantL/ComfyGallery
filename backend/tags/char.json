@@ -5076,15 +5076,6 @@
         "url": "https://danbooru.donmai.us/posts?tags=hakurei_reimu_(pc-98)"
     },
     {
-        "character": "hakurei_reimu",
-        "copyright": "touhou",
-        "tag": "hakurei reimu, touhou",
-        "core_tags": "1girl, brown eyes, red eyes, brown hair, long hair, black hair, hair bow, hair tubes, red bow, detached sleeves",
-        "count": 78109,
-        "solo_count": 27118,
-        "url": "https://danbooru.donmai.us/posts?tags=hakurei_reimu"
-    },
-    {
         "character": "hamakaze_(kancolle)",
         "copyright": "kantai_collection",
         "tag": "hamakaze \\(kancolle\\), kantai collection",
@@ -5398,15 +5389,6 @@
         "count": 1564,
         "solo_count": 1320,
         "url": "https://danbooru.donmai.us/posts?tags=hatsune_miku_(append)"
-    },
-    {
-        "character": "hatsune_miku",
-        "copyright": "vocaloid",
-        "tag": "hatsune miku, vocaloid",
-        "core_tags": "1girl, aqua eyes, blue eyes, very long hair, aqua hair, long hair, twintails, detached sleeves",
-        "count": 103500,
-        "solo_count": 75493,
-        "url": "https://danbooru.donmai.us/posts?tags=hatsune_miku"
     },
     {
         "character": "hatsushimo_(kancolle)",
@@ -14967,15 +14949,6 @@
         "url": "https://danbooru.donmai.us/posts?tags=rem_(re:zero)"
     },
     {
-        "character": "remilia_scarlet",
-        "copyright": "touhou",
-        "tag": "remilia scarlet, touhou",
-        "core_tags": "1girl, red eyes, short hair, blue hair, mob cap, bat wings, bat wings",
-        "count": 52085,
-        "solo_count": 19259,
-        "url": "https://danbooru.donmai.us/posts?tags=remilia_scarlet"
-    },
-    {
         "character": "rena_erindel",
         "copyright": "elsword",
         "tag": "rena erindel, elsword",
@@ -21031,5 +21004,32 @@
         "count": 1577,
         "solo_count": 786,
         "url": "https://danbooru.donmai.us/posts?tags=zundamon"
+    },
+    {
+        "character": "remilia_scarlet",
+        "copyright": "touhou",
+        "tag": "remilia scarlet, touhou",
+        "core_tags": "1girl, red eyes, short hair, blue hair, mob cap, bat wings, bat wings",
+        "count": 52085,
+        "solo_count": 19259,
+        "url": "https://danbooru.donmai.us/posts?tags=remilia_scarlet"
+    },
+    {
+        "character": "hatsune_miku",
+        "copyright": "vocaloid",
+        "tag": "hatsune miku, vocaloid",
+        "core_tags": "1girl, aqua eyes, blue eyes, very long hair, aqua hair, long hair, twintails, detached sleeves",
+        "count": 103500,
+        "solo_count": 75493,
+        "url": "https://danbooru.donmai.us/posts?tags=hatsune_miku"
+    },
+    {
+        "character": "hakurei_reimu",
+        "copyright": "touhou",
+        "tag": "hakurei reimu, touhou",
+        "core_tags": "1girl, brown eyes, red eyes, brown hair, long hair, black hair, hair bow, hair tubes, red bow, detached sleeves",
+        "count": 78109,
+        "solo_count": 27118,
+        "url": "https://danbooru.donmai.us/posts?tags=hakurei_reimu"
     }
 ]

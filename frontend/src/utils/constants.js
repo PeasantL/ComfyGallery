@@ -8,6 +8,11 @@ export const API_ENDPOINTS = {
   characterRandom: '/api/tags/character/random',
   danbooruRandom: '/api/tags/danbooru/random',
   participantRandom: '/api/tags/participant/random',
+  removeTags: 'api/remove-tags',
+  restoreDeletedTags: 'api/restore-deleted-tags',
+  restoreDatabase: 'api/restore-database',
+  getDeletedChar: 'api/tags/deleted-character',
+  getDeletedArtist: 'api/tags/deleted-artist',
 }
 
 export const TAG_DEFAULTS = {

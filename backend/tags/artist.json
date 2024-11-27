@@ -468,12 +468,6 @@
         "url": "https://danbooru.donmai.us/posts?tags=ebi_193"
     },
     {
-        "artist": "ebifurya",
-        "tag": "ebifurya",
-        "count": 5846,
-        "url": "https://danbooru.donmai.us/posts?tags=ebifurya"
-    },
-    {
         "artist": "echo_(circa)",
         "tag": "echo \\(circa\\)",
         "count": 1627,
@@ -636,12 +630,6 @@
         "url": "https://danbooru.donmai.us/posts?tags=ha_akabouzu"
     },
     {
-        "artist": "hammer_(sunset_beach)",
-        "tag": "hammer \\(sunset beach\\)",
-        "count": 5387,
-        "url": "https://danbooru.donmai.us/posts?tags=hammer_(sunset_beach)"
-    },
-    {
         "artist": "hamu_koutarou",
         "tag": "hamu koutarou",
         "count": 2380,
@@ -676,12 +664,6 @@
         "tag": "haruhisky",
         "count": 1734,
         "url": "https://danbooru.donmai.us/posts?tags=haruhisky"
-    },
-    {
-        "artist": "haruyama_kazunori",
-        "tag": "haruyama kazunori",
-        "count": 5229,
-        "url": "https://danbooru.donmai.us/posts?tags=haruyama_kazunori"
     },
     {
         "artist": "hews",
@@ -880,12 +862,6 @@
         "tag": "ito noizi",
         "count": 1427,
         "url": "https://danbooru.donmai.us/posts?tags=ito_noizi"
-    },
-    {
-        "artist": "itomugi-kun",
-        "tag": "itomugi-kun",
-        "count": 4512,
-        "url": "https://danbooru.donmai.us/posts?tags=itomugi-kun"
     },
     {
         "artist": "ixy",
@@ -2416,5 +2392,29 @@
         "tag": "zyugoya",
         "count": 1080,
         "url": "https://danbooru.donmai.us/posts?tags=zyugoya"
+    },
+    {
+        "artist": "hammer_(sunset_beach)",
+        "tag": "hammer \\(sunset beach\\)",
+        "count": 5387,
+        "url": "https://danbooru.donmai.us/posts?tags=hammer_(sunset_beach)"
+    },
+    {
+        "artist": "itomugi-kun",
+        "tag": "itomugi-kun",
+        "count": 4512,
+        "url": "https://danbooru.donmai.us/posts?tags=itomugi-kun"
+    },
+    {
+        "artist": "haruyama_kazunori",
+        "tag": "haruyama kazunori",
+        "count": 5229,
+        "url": "https://danbooru.donmai.us/posts?tags=haruyama_kazunori"
+    },
+    {
+        "artist": "ebifurya",
+        "tag": "ebifurya",
+        "count": 5846,
+        "url": "https://danbooru.donmai.us/posts?tags=ebifurya"
     }
 ]
