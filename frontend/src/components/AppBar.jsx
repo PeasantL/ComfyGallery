@@ -1,7 +1,7 @@
 import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import MenuIcon from '@mui/icons-material/Menu'
+import StorageIcon from '@mui/icons-material/Storage'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddCircleIcon from '@mui/icons-material/AddCircle' // New icon for second drawer
 import PropTypes from 'prop-types'
@@ -11,7 +11,7 @@ const AppBar = ({ toggleDrawer, toggleSecondaryDrawer, handleDelete }) => (
   <Box className="app-bar">
     <Stack className="app-bar-top">
       <IconButton onClick={toggleSecondaryDrawer} color="inherit">
-        <AddCircleIcon />
+        <StorageIcon />
       </IconButton>
     </Stack>
     <Box className="app-bar-middle">
@@ -20,7 +20,7 @@ const AppBar = ({ toggleDrawer, toggleSecondaryDrawer, handleDelete }) => (
         color="inherit"
         className="app-bar-generate"
       >
-        <MenuIcon />
+        <AddCircleIcon />
       </IconButton>
     </Box>
     <Stack className="app-bar-bottom">
