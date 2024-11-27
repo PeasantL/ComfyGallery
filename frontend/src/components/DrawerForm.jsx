@@ -269,7 +269,6 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
 
 DrawerForm.propTypes = {
   isDrawerOpen: PropTypes.bool.isRequired,
-  drawerWidth: PropTypes.number.isRequired,
   addImage: PropTypes.func.isRequired,
 }
 
