@@ -4,7 +4,7 @@ import '../styles/ImageCatalog.css'
 import ImageCard from './ImageCard'
 
 const ImageCatalog = ({ images, handleCardClick }) => (
-  <Grid2 container spacing={2} className="image-catalog">
+  <Grid2 container spacing={1} className="image-catalog">
     {images.map((image) => (
       <Grid2
         xs={12}

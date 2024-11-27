@@ -1,6 +1,10 @@
+:root {
+  --image-grid-size: 250px;
+}
+
 .image-card {
-  height: 250px;
-  width: 250px;
+  height: var(--image-grid-size);
+  width: var(--image-grid-size);
   display: flex;
   flex-direction: column;
   cursor: pointer;
