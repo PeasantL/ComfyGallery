@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import './App.css' // Import the external CSS file
 import AppBar from './components/AppBar'
 import DrawerForm from './components/DrawerForm'
+import SecondaryDrawer from './components/SecondaryDrawer' // Import the new drawer
 import ImageCatalog from './components/ImageCatalog'
 import ImageModal from './components/ImageModal'
 import { useImages } from './utils/useImages'
 
 const App = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
+  const [isSecondaryDrawerOpen, setSecondaryDrawerOpen] = useState(false) // State for the second drawer
   const [selectedImage, setSelectedImage] = useState(null)
   const [isModalOpen, setModalOpen] = useState(false)
   const { images, loadImages, addImage } = useImages()
@@ -52,17 +54,33 @@ const App = () => {
     }
   }
 
+  // Toggle Drawer States to Ensure Only One is Open at a Time
+  const toggleDrawer = () => {
+    setDrawerOpen(!isDrawerOpen)
+    if (!isDrawerOpen) setSecondaryDrawerOpen(false) // Close the secondary drawer
+  }
+
+  const toggleSecondaryDrawer = () => {
+    setSecondaryDrawerOpen(!isSecondaryDrawerOpen)
+    if (!isSecondaryDrawerOpen) setDrawerOpen(false) // Close the main drawer
+  }
+
   return (
     <div className="App">
       <AppBar
-        toggleDrawer={() => setDrawerOpen(!isDrawerOpen)}
+        toggleDrawer={toggleDrawer}
+        toggleSecondaryDrawer={toggleSecondaryDrawer}
         handleDelete={isModalOpen ? () => deleteImage(selectedImage) : null}
       />
       <div className="App__content">
         <DrawerForm isDrawerOpen={isDrawerOpen} addImage={addImage} />
+        <SecondaryDrawer isDrawerOpen={isSecondaryDrawerOpen} />{' '}
+        {/* Add second drawer */}
         <div
           className={`App__main ${
-            isDrawerOpen ? 'App__main--drawer-open' : ''
+            isDrawerOpen || isSecondaryDrawerOpen
+              ? 'App__main--drawer-open'
+              : ''
           }`}
         >
           <ImageCatalog images={images} handleCardClick={handleCardClick} />
