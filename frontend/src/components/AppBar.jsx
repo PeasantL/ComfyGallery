@@ -9,13 +9,21 @@ import '../styles/AppBar.css'
 
 const AppBar = ({ toggleDrawer, toggleSecondaryDrawer, handleDelete }) => (
   <Box className="app-bar">
-    <Stack className="app-bar-stack">
-      <IconButton onClick={toggleDrawer} color="inherit">
-        <MenuIcon />
-      </IconButton>
+    <Stack className="app-bar-top">
       <IconButton onClick={toggleSecondaryDrawer} color="inherit">
         <AddCircleIcon />
       </IconButton>
+    </Stack>
+    <Box className="app-bar-middle">
+      <IconButton
+        onClick={toggleDrawer}
+        color="inherit"
+        className="app-bar-generate"
+      >
+        <MenuIcon />
+      </IconButton>
+    </Box>
+    <Stack className="app-bar-bottom">
       {handleDelete && (
         <IconButton onClick={handleDelete} color="inherit">
           <DeleteIcon />

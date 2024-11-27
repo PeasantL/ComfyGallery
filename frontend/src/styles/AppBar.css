@@ -9,18 +9,33 @@
   height: 100%;
   width: var(--app-bar-width);
   display: flex;
-  justify-content: center; /* Centers the Stack vertically */
-  align-items: center; /* Ensures horizontal centering */
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
   background-color: #222;
   z-index: 1400;
-  border-right: 1px solid #444; /* Adjusted for vertical bar style */
+  border-right: 1px solid #444;
 }
 
-.app-bar-stack {
+.app-bar-top {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align items from the top */
-  align-items: center; /* Keep icons horizontally centered */
-  height: 0%; /* Stack takes full height of the app bar */
-  gap: 16px; /* Add consistent spacing between icons */
+  align-items: center; /* Center icons horizontally */
+  justify-content: flex-end;
+  gap: 16px; /* Spacing between icons */
+  flex: 1;
+}
+
+.app-bar-middle {
+  display: flex;
+  align-items: center; /* Center the generate button horizontally */
+  justify-content: center; /* Center the generate button vertically */
+  flex: 0.2;
+}
+
+.app-bar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center icons horizontally */
+  gap: 16px; /* Spacing between icons */
+  flex: 1;
 }
