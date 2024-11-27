@@ -11,7 +11,13 @@ import '../styles/DrawerForm.css'
 import DrawerFormTagAuto from './DrawerFormTagAuto'
 import generateImage from '../utils/generateImage'
 
-// Default tag values
+const API_ENDPOINTS = {
+  artist: '/api/tags/artist',
+  character: '/api/tags/character',
+  danbooru: '/api/tags/danbooru',
+  participant: '/api/tags/participant',
+}
+
 const TAG_DEFAULTS = {
   participantTags: ['1girl'],
   characterTags: [],
@@ -145,7 +151,7 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
         <Divider className="divider-custom" />
         <Stack spacing={2}>
           <DrawerFormTagAuto
-            variableFile="src/assets/participant.json"
+            apiEndpoint={API_ENDPOINTS['participant']}
             label="Participant"
             placeholder="1girl"
             tags={tags.participantTags}
@@ -154,7 +160,7 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
             }
           />
           <DrawerFormTagAuto
-            variableFile="src/assets/char.json"
+            apiEndpoint={API_ENDPOINTS['character']}
             label="Character, Series"
             placeholder="ganyu \(genshin impact\), genshin"
             tags={tags.characterTags}
@@ -163,7 +169,7 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
             }
           />
           <DrawerFormTagAuto
-            variableFile="src/assets/artist.json"
+            apiEndpoint={API_ENDPOINTS['artist']}
             label="Artist"
             placeholder="nyatcha"
             tags={tags.artistTags}
@@ -172,7 +178,7 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
             }
           />
           <DrawerFormTagAuto
-            variableFile="src/assets/danbooru-tags.json"
+            apiEndpoint={API_ENDPOINTS['danbooru']}
             label="General Tags"
             placeholder="safe"
             tags={tags.generalTags}

@@ -1,78 +1,95 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
 import Stack from '@mui/material/Stack'
 import PropTypes from 'prop-types'
 
+// Debounce utility function
+const debounce = (func, delay) => {
+  let timeout
+  return (...args) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), delay)
+  }
+}
+
 const DrawerFormTagAuto = ({
-  variableFile,
-  label,
-  placeholder,
+  label = 'Search Tags',
+  placeholder = 'Type to search...',
   tags,
   setTags,
-  hideTags = false,
+  apiEndpoint, // Parent-provided API endpoint
 }) => {
-  const [options, setOptions] = useState([])
+  const [options, setOptions] = useState([]) // Available options
   const [inputValue, setInputValue] = useState('') // Controlled input value
 
-  useEffect(() => {
-    const loadTags = async () => {
-      if (!variableFile) {
-        setOptions([]) // No options if variableFile is not provided
+  // Load tags with debounce
+  const loadTags = useCallback(
+    debounce(async (input) => {
+      if (!apiEndpoint) {
+        setOptions([])
         return
       }
 
       try {
-        const response = await fetch(variableFile)
+        const response = await fetch(
+          `${apiEndpoint}?q=${encodeURIComponent(input)}`
+        )
         const data = await response.json()
-        // Sort options by count in descending order
-        const sortedOptions = data.sort((a, b) => b.count - a.count)
-        setOptions(sortedOptions)
+        setOptions(data.tags || []) // Use tags array from the backend
       } catch (error) {
         console.error('Error loading tags:', error)
         setOptions([]) // Fallback to empty options in case of error
       }
-    }
-    loadTags()
-  }, [variableFile])
+    }, 100),
+    [apiEndpoint]
+  )
 
-  const filterOptions = (options, { inputValue }) => {
-    const normalizedInput = inputValue.trim().toLowerCase() // Normalize input by trimming spaces and converting to lowercase
-    return options
-      .filter((option) => option.tag.toLowerCase().includes(normalizedInput))
-      .slice(0, 10) // Limit to top 10 results
+  // Effect to call loadTags when inputValue changes
+  useEffect(() => {
+    if (inputValue.trim() || inputValue === '') {
+      loadTags(inputValue)
+    } else {
+      setOptions([]) // Reset options when input is cleared
+    }
+  }, [inputValue, loadTags])
+
+  // Handle focus to trigger query with an empty string
+  const handleFocus = () => {
+    if (!inputValue.trim()) {
+      loadTags('') // Query the API with an empty string
+    }
   }
 
   return (
     <Stack spacing={2}>
+      {/* Autocomplete Input for Tags */}
       <Autocomplete
-        {...(hideTags ? { limitTags: 1 } : {})} // Conditionally include limitTags
         multiple
-        id="tags-filled"
-        options={options.map((option) => option.tag)} // Pass only `tag` strings to options
+        options={options.map((option) => option.tag)}
         freeSolo
-        filterOptions={(opts, state) =>
-          filterOptions(options, state).map((opt) => opt.tag)
-        }
-        value={tags}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
+        value={tags}
         onChange={(event, newValue) => setTags(newValue)}
+        onFocus={handleFocus} // Trigger API call on focus
         renderTags={(value, getTagProps) =>
-          value.map((option, index) => {
-            const { key, ...tagProps } = getTagProps({ index })
-            return (
-              <Chip variant="outlined" label={option} key={key} {...tagProps} />
-            )
-          })
+          value.map((option, index) => (
+            <Chip
+              variant="outlined"
+              label={option}
+              {...getTagProps({ index })}
+              key={option}
+            />
+          ))
         }
         renderInput={(params) => (
           <TextField
             {...params}
             variant="filled"
             label={label}
-            placeholder={tags.length === 0 ? placeholder : ''} // Hide placeholder if there are tags
+            placeholder={tags.length === 0 ? placeholder : ''}
           />
         )}
       />
@@ -81,12 +98,11 @@ const DrawerFormTagAuto = ({
 }
 
 DrawerFormTagAuto.propTypes = {
-  variableFile: PropTypes.string,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   placeholder: PropTypes.string,
-  tags: PropTypes.arrayOf(PropTypes.string).isRequired, // Ensure `tags` is an array of strings
-  setTags: PropTypes.func.isRequired,
-  hideTags: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired, // Tags array
+  setTags: PropTypes.func.isRequired, // Function to update tags
+  apiEndpoint: PropTypes.string, // API endpoint for fetching tags
 }
 
 export default DrawerFormTagAuto

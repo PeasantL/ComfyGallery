@@ -6,12 +6,14 @@ import random
 import io
 import urllib.request
 from PIL import Image
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from websocket import create_connection
 from fastapi.responses import JSONResponse
+from typing import Optional
+from heapq import nlargest
 
 # Constants
 SERVER_ADDRESS = "127.0.0.1:8188"
@@ -103,6 +105,48 @@ def get_images_via_websocket(ws, prompt):
                 output_images[current_node] = images_output
 
     return output_images
+
+TAGS_FOLDER = "./tags"
+
+def load_and_filter_tags(file_name: str, query: Optional[str]) -> list:
+    """Load and filter tags from a given JSON file, optimized for speed."""
+    file_path = os.path.join(TAGS_FOLDER, file_name)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail=f"{file_name} not found")
+
+    try:
+        with open(file_path, "r") as file:
+            data = json.load(file)
+            # Filter by query if provided, using a generator
+            filtered_data = (
+                tag for tag in data if not query or query.lower() in tag["tag"].lower()
+            )
+            # Use a heap to get the top 8 entries by count, converting count to int
+            top_tags = nlargest(
+                8,
+                filtered_data,
+                key=lambda x: int(x.get("count", "0"))  # Convert count to int
+            )
+            return top_tags
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing {file_name}: {str(e)}")
+
+@app.get("/tags/artist/")
+def get_artist_tags(q: Optional[str] = Query(None, description="Search query for artist tags")):
+    return {"tags": load_and_filter_tags("artist.json", q)}
+
+@app.get("/tags/character/")
+def get_character_tags(q: Optional[str] = Query(None, description="Search query for character tags")):
+    return {"tags": load_and_filter_tags("char.json", q)}
+
+@app.get("/tags/danbooru/")
+def get_danbooru_tags(q: Optional[str] = Query(None, description="Search query for Danbooru tags")):
+    return {"tags": load_and_filter_tags("danbooru.json", q)}
+
+@app.get("/tags/participant/")
+def get_danbooru_tags(q: Optional[str] = Query(None, description="Search query for Participant tags")):
+    return {"tags": load_and_filter_tags("participant.json", q)}
+
 
 @app.get("/thumb/{filename}")
 def get_thumbnail(filename: str):
