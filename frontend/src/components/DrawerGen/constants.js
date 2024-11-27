@@ -1,0 +1,48 @@
+// constants.js
+export const API_ENDPOINTS = {
+  artist: '/api/tags/artist',
+  character: '/api/tags/character',
+  danbooru: '/api/tags/danbooru',
+  participant: '/api/tags/participant',
+  artistRandom: '/api/tags/artist/random',
+  characterRandom: '/api/tags/character/random',
+  danbooruRandom: '/api/tags/danbooru/random',
+  participantRandom: '/api/tags/participant/random',
+}
+
+export const TAG_DEFAULTS = {
+  participantTags: ['1girl'],
+  characterTags: [],
+  artistTags: [],
+  generalTags: [],
+  qualityTags: [
+    'masterpiece',
+    'best quality',
+    'newest',
+    'absurdres',
+    'highres',
+    'very awa',
+  ],
+  defaultNegativeTags: [
+    'worst quality',
+    'old',
+    'early',
+    'low quality',
+    'lowres',
+    'signature',
+    'username',
+    'logo',
+    'bad hands',
+    'mutated hands',
+    'mammal',
+    'anthro',
+    'furry',
+    'ambiguous form',
+    'feral',
+    'semi-anthro',
+    'censored',
+    'bar censor',
+    'mosaic censor',
+  ],
+  additionalNegativeTags: [],
+}

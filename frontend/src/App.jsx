@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css' // Import the external CSS file
 import AppBar from './components/AppBar'
-import DrawerForm from './components/DrawerForm'
+import DrawerForm from './components/DrawerGen/DrawerGen'
 import SecondaryDrawer from './components/SecondaryDrawer' // Import the new drawer
 import ImageCatalog from './components/ImageCatalog'
 import ImageModal from './components/ImageModal'

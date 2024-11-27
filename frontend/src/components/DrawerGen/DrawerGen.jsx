@@ -11,71 +11,16 @@ import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import PropTypes from 'prop-types'
-import '../styles/DrawerForm.css'
-import DrawerFormTagAuto from './DrawerFormTagAuto'
-import generateImage from '../utils/generateImage'
-
-const API_ENDPOINTS = {
-  artist: '/api/tags/artist',
-  character: '/api/tags/character',
-  danbooru: '/api/tags/danbooru',
-  participant: '/api/tags/participant',
-  artistRandom: '/api/tags/artist/random',
-  characterRandom: '/api/tags/character/random',
-  danbooruRandom: '/api/tags/danbooru/random',
-  participantRandom: '/api/tags/participant/random',
-}
-
-const TAG_DEFAULTS = {
-  participantTags: ['1girl'],
-  characterTags: [],
-  artistTags: [],
-  generalTags: [],
-  qualityTags: [
-    'masterpiece',
-    'best quality',
-    'newest',
-    'absurdres',
-    'highres',
-    'very awa',
-  ],
-  defaultNegativeTags: [
-    'worst quality',
-    'old',
-    'early',
-    'low quality',
-    'lowres',
-    'signature',
-    'username',
-    'logo',
-    'bad hands',
-    'mutated hands',
-    'mammal',
-    'anthro',
-    'furry',
-    'ambiguous form',
-    'feral',
-    'semi-anthro',
-    'censored',
-    'bar censor',
-    'mosaic censor',
-  ],
-  additionalNegativeTags: [],
-}
-
-// Utility function to get data from localStorage or use defaults
-const getStoredTags = (key, defaultValue) =>
-  JSON.parse(localStorage.getItem(key)) || defaultValue
-
-const saveToLocalStorage = (key, value) => {
-  localStorage.setItem(key, JSON.stringify(value))
-}
-
-// Utility function to get state from localStorage
-const getFromLocalStorage = (key, defaultValue) => {
-  const storedValue = localStorage.getItem(key)
-  return storedValue ? JSON.parse(storedValue) : defaultValue
-}
+import '../../styles/DrawerForm.css'
+import DrawerFormTagAuto from './DrawerGenAutoForm'
+import generateImage from '../../utils/generateImage'
+import { API_ENDPOINTS, TAG_DEFAULTS } from './constants'
+import {
+  getStoredTags,
+  saveToLocalStorage,
+  getFromLocalStorage,
+} from '../../utils/localStorageUtils'
+import { fetchRandomTag } from '../../utils/apiUtils'
 
 const DrawerForm = ({ isDrawerOpen, addImage }) => {
   // State variables with default values
@@ -123,15 +68,10 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
 
   const handleShuffle = async (type) => {
     try {
-      const response = await fetch(API_ENDPOINTS[`${type}Random`])
-      if (!response.ok) {
-        throw new Error(`Failed to fetch random ${type} tag`)
-      }
-      const data = await response.json()
-      const randomTag = data?.tag?.tag || ''
+      const randomTag = await fetchRandomTag(API_ENDPOINTS[`${type}Random`])
       setTags((prevTags) => ({
         ...prevTags,
-        [`${type}Tags`]: [randomTag], // Clear and add the random tag
+        [`${type}Tags`]: [randomTag],
       }))
     } catch (error) {
       console.error(`Error shuffling ${type} tag:`, error)
@@ -140,28 +80,18 @@ const DrawerForm = ({ isDrawerOpen, addImage }) => {
 
   const handleGenerate = async () => {
     setLoading(true)
-
     try {
-      // Use a local variable to handle updated tags
       let updatedTags = { ...tags }
 
-      // Fetch random tags if toggles are active
       if (characterRandomToggle) {
-        const response = await fetch(API_ENDPOINTS['characterRandom'])
-        if (response.ok) {
-          const data = await response.json()
-          const randomTag = data?.tag?.tag || ''
-          updatedTags.characterTags = [randomTag]
-        }
+        updatedTags.characterTags = [
+          await fetchRandomTag(API_ENDPOINTS['characterRandom']),
+        ]
       }
-
       if (artistRandomToggle) {
-        const response = await fetch(API_ENDPOINTS['artistRandom'])
-        if (response.ok) {
-          const data = await response.json()
-          const randomTag = data?.tag?.tag || ''
-          updatedTags.artistTags = [randomTag]
-        }
+        updatedTags.artistTags = [
+          await fetchRandomTag(API_ENDPOINTS['artistRandom']),
+        ]
       }
 
       // Update the state after fetching all random tags
