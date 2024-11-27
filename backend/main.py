@@ -223,8 +223,6 @@ async def generate_image(prompt: Prompt):
 
     return {"titles": titles}
 
-
-
 @app.get("/images/")
 def list_images():
     """List all images and their thumbnails."""
@@ -239,7 +237,6 @@ def list_images():
                 "title": filename.split(".")[0]
             })
     return {"images": images}
-
 
 @app.get("/images/{filename}")
 def get_image(filename: str):
