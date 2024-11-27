@@ -20,6 +20,7 @@ const DrawerFormTagAuto = ({
   tags,
   setTags,
   apiEndpoint, // Parent-provided API endpoint
+  limit = false,
 }) => {
   const [options, setOptions] = useState([]) // Available options
   const [inputValue, setInputValue] = useState('') // Controlled input value
@@ -92,6 +93,7 @@ const DrawerFormTagAuto = ({
             placeholder={tags.length === 0 ? placeholder : ''}
           />
         )}
+        {...(limit && { limitTags: 1 })}
       />
     </Stack>
   )

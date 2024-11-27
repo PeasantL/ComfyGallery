@@ -147,6 +147,44 @@ def get_danbooru_tags(q: Optional[str] = Query(None, description="Search query f
 def get_danbooru_tags(q: Optional[str] = Query(None, description="Search query for Participant tags")):
     return {"tags": load_and_filter_tags("participant.json", q)}
 
+@app.get("/tags/artist/random")
+def get_random_artist_tag():
+    """Select a random artist tag from artist.json."""
+    return get_random_tag_from_file("artist.json")
+
+@app.get("/tags/character/random")
+def get_random_character_tag():
+    """Select a random character tag from char.json."""
+    return get_random_tag_from_file("char.json")
+
+@app.get("/tags/danbooru/random")
+def get_random_danbooru_tag():
+    """Select a random Danbooru tag from danbooru.json."""
+    return get_random_tag_from_file("danbooru.json")
+
+@app.get("/tags/participant/random")
+def get_random_participant_tag():
+    """Select a random participant tag from participant.json."""
+    return get_random_tag_from_file("participant.json")
+
+def get_random_tag_from_file(file_name: str):
+    """Helper function to select a random tag from a JSON file."""
+    file_path = os.path.join(TAGS_FOLDER, file_name)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail=f"{file_name} not found")
+
+    try:
+        with open(file_path, "r") as file:
+            data = json.load(file)
+
+            if not data:
+                raise HTTPException(status_code=404, detail=f"No tags found in {file_name}")
+
+            # Select a random tag
+            random_tag = random.choice(data)
+            return {"tag": random_tag}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing {file_name}: {str(e)}")
 
 @app.get("/thumb/{filename}")
 def get_thumbnail(filename: str):
