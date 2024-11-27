@@ -1,22 +1,36 @@
 .image-card {
-  max-width: 300px;
-  width: 100%;
+  height: 250px;
+  width: 250px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 330px;
   cursor: pointer;
+  position: relative;
+  overflow: hidden; /* Ensure overlay stays within card bounds */
+}
+
+.image-card-overlay-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .image-card-media {
-  height: 280px;
-  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 
-.image-card-content {
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.image-card-overlay {
+  position: absolute;
+  bottom: 0; /* Align overlay at the bottom */
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  color: white;
+  width: 100%;
+  padding: 10px;
   text-align: center;
+}
+
+.image-card-text {
+  font-size: 14px;
+  font-weight: bold;
 }
