@@ -125,7 +125,7 @@ def load_and_filter_tags(file_name: str, query: Optional[str]) -> list:
             top_tags = nlargest(
                 8,
                 filtered_data,
-                key=lambda x: int(x.get("count", "0"))  # Convert count to int
+                key=lambda x: x.get("count", "0")  # Convert count to int
             )
             return top_tags
     except Exception as e:
