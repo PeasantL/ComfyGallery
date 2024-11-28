@@ -4,7 +4,7 @@ import os
 import json
 
 from utils import ensure_deleted_tags_file
-from constants import DELETED_TAGS_FILE, TAGS_FOLDER, BACKUP_TAGS_FOLDER
+from constants import DELETED_TAGS_FILE, DEFAULT_TAGS_FOLDER, PUBLIC_TAGS_FOLDER
 
 router = APIRouter()
 
@@ -12,7 +12,7 @@ router = APIRouter()
 async def restore_deleted_tags(request: dict):
     """
     Restore only the deleted tags provided in the request
-    to their respective active tag lists.
+    to their respective active tag lists, sorted alphabetically by tag.
     """
     try:
         # Parse the incoming tags
@@ -31,7 +31,7 @@ async def restore_deleted_tags(request: dict):
             deleted_tags = json.load(file)
 
         # Restore character tags
-        char_file_path = os.path.join(TAGS_FOLDER, "char.json")
+        char_file_path = os.path.join(PUBLIC_TAGS_FOLDER, "char.json")
         with open(char_file_path, "r") as file:
             current_character_tags = json.load(file)
 
@@ -40,15 +40,17 @@ async def restore_deleted_tags(request: dict):
             if tag["tag"] in character_tags_to_restore
         ]
         current_character_tags.extend(restored_character_tags)
-        current_character_tags = list(
-            {tag["tag"]: tag for tag in current_character_tags}.values()
-        )  # Deduplicate by tag
+        # Deduplicate and sort alphabetically by "tag"
+        current_character_tags = sorted(
+            {tag["tag"]: tag for tag in current_character_tags}.values(),
+            key=lambda x: x["tag"]
+        )
 
         with open(char_file_path, "w") as file:
             json.dump(current_character_tags, file, indent=4)
 
         # Restore artist tags
-        artist_file_path = os.path.join(TAGS_FOLDER, "artist.json")
+        artist_file_path = os.path.join(PUBLIC_TAGS_FOLDER, "artist.json")
         with open(artist_file_path, "r") as file:
             current_artist_tags = json.load(file)
 
@@ -57,9 +59,11 @@ async def restore_deleted_tags(request: dict):
             if tag["tag"] in artist_tags_to_restore
         ]
         current_artist_tags.extend(restored_artist_tags)
-        current_artist_tags = list(
-            {tag["tag"]: tag for tag in current_artist_tags}.values()
-        )  # Deduplicate by tag
+        # Deduplicate and sort alphabetically by "tag"
+        current_artist_tags = sorted(
+            {tag["tag"]: tag for tag in current_artist_tags}.values(),
+            key=lambda x: x["tag"]
+        )
 
         with open(artist_file_path, "w") as file:
             json.dump(current_artist_tags, file, indent=4)
@@ -82,16 +86,17 @@ async def restore_deleted_tags(request: dict):
             status_code=500, detail=f"Error restoring tags: {str(e)}"
         )
 
+
 @router.post("/restore-database")
 async def restore_database():
     """Restore the database to its original state."""
     try:
-        if not os.path.exists(BACKUP_TAGS_FOLDER):
+        if not os.path.exists(DEFAULT_TAGS_FOLDER):
             raise HTTPException(status_code=404, detail="Backup folder not found")
 
-        for file_name in os.listdir(BACKUP_TAGS_FOLDER):
-            backup_file_path = os.path.join(BACKUP_TAGS_FOLDER, file_name)
-            original_file_path = os.path.join(TAGS_FOLDER, file_name)
+        for file_name in os.listdir(DEFAULT_TAGS_FOLDER):
+            backup_file_path = os.path.join(DEFAULT_TAGS_FOLDER, file_name)
+            original_file_path = os.path.join(PUBLIC_TAGS_FOLDER, file_name)
 
             if os.path.exists(backup_file_path):
                 with open(backup_file_path, "r") as backup_file:
@@ -120,8 +125,8 @@ async def remove_tags(request: dict):
             raise HTTPException(status_code=400, detail="No tags provided for removal")
 
         # Load current tags
-        char_file_path = os.path.join(TAGS_FOLDER, "char.json")
-        artist_file_path = os.path.join(TAGS_FOLDER, "artist.json")
+        char_file_path = os.path.join(PUBLIC_TAGS_FOLDER, "char.json")
+        artist_file_path = os.path.join(PUBLIC_TAGS_FOLDER, "artist.json")
 
         with open(char_file_path, "r") as file:
             current_character_tags = json.load(file)

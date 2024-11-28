@@ -8,7 +8,6 @@ import urllib.request
 from PIL import Image
 from typing import Optional
 from heapq import nlargest
-from websocket import create_connection
 from fastapi import HTTPException
 
 from constants import (
@@ -16,7 +15,7 @@ from constants import (
     CLIENT_ID,
     IMAGES_FOLDER,
     THUMBNAILS_FOLDER,
-    TAGS_FOLDER,
+    DEFAULT_TAGS_FOLDER,
     DELETED_TAGS_FILE,
 )
 
@@ -89,7 +88,7 @@ def ensure_deleted_tags_file():
 
 def load_and_filter_tags(file_name: str, query: Optional[str]) -> list:
     """Load and filter tags from a given JSON file, optimized for speed."""
-    file_path = os.path.join(TAGS_FOLDER, file_name)
+    file_path = os.path.join(DEFAULT_TAGS_FOLDER, file_name)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail=f"{file_name} not found")
 
@@ -112,7 +111,7 @@ def load_and_filter_tags(file_name: str, query: Optional[str]) -> list:
 
 def get_random_tag_from_file(file_name: str):
     """Helper function to select a random tag from a JSON file."""
-    file_path = os.path.join(TAGS_FOLDER, file_name)
+    file_path = os.path.join(DEFAULT_TAGS_FOLDER, file_name)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail=f"{file_name} not found")
 
