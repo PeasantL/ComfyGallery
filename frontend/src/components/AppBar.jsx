@@ -4,12 +4,21 @@ import Stack from '@mui/material/Stack'
 import StorageIcon from '@mui/icons-material/Storage'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddCircleIcon from '@mui/icons-material/AddCircle' // New icon for second drawer
+import SearchIcon from '@mui/icons-material/Search'
 import PropTypes from 'prop-types'
 import '../styles/AppBar.css'
 
-const AppBar = ({ toggleDrawer, toggleSecondaryDrawer, handleDelete }) => (
+const AppBar = ({
+  toggleDrawer,
+  toggleSecondaryDrawer,
+  toggleTertiaryDrawer,
+  handleDelete,
+}) => (
   <Box className="app-bar">
     <Stack className="app-bar-top">
+      <IconButton onClick={toggleTertiaryDrawer} color="inherit">
+        <SearchIcon />
+      </IconButton>
       <IconButton onClick={toggleSecondaryDrawer} color="inherit">
         <StorageIcon />
       </IconButton>

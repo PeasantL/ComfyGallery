@@ -11,16 +11,16 @@ import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import PropTypes from 'prop-types'
-import '../../styles/DrawerForm.css'
-import DrawerFormTagAuto from '../DrawerTagAutoForm'
-import generateImage from '../../utils/generateImage'
-import { API_ENDPOINTS, TAG_DEFAULTS } from '../../utils/constants'
+import '../styles/DrawerForm.css'
+import DrawerFormTagAuto from './DrawerTagAutoForm'
+import generateImage from '../utils/generateImage'
+import { API_ENDPOINTS, TAG_DEFAULTS } from '../utils/constants'
 import {
   getStoredTags,
   saveToLocalStorage,
   getFromLocalStorage,
-} from '../../utils/localStorageUtils'
-import { fetchRandomTag } from '../../utils/apiUtils'
+} from '../utils/localStorageUtils'
+import { fetchRandomTag } from '../utils/apiUtils'
 
 const DrawerForm = ({ isDrawerOpen, addImage }) => {
   // State variables with default values

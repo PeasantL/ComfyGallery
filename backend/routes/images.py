@@ -1,5 +1,5 @@
 # routes/images.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse, JSONResponse
 import os
 
@@ -8,11 +8,23 @@ from constants import IMAGES_FOLDER, THUMBNAILS_FOLDER
 router = APIRouter()
 
 @router.get("/images/")
-def list_images():
-    """List all images and their thumbnails."""
+def list_images(
+    character: str = Query(None, description="Filter images by character tag"),
+    artist: str = Query(None, description="Filter images by artist tag")
+):
+    """
+    List all images and their thumbnails, optionally filtered by character and artist.
+    """
     images = []
+
     for filename in os.listdir(IMAGES_FOLDER):
         if filename.endswith(".png"):  # Only include PNG files
+            # Apply filters if provided
+            if character and character.lower() not in filename.lower():
+                continue
+            if artist and artist.lower() not in filename.lower():
+                continue
+
             thumbnail_filename = filename
             thumbnail_path = os.path.join(THUMBNAILS_FOLDER, thumbnail_filename)
             images.append({
@@ -20,7 +32,40 @@ def list_images():
                 "thumbnail": f"/thumb/{thumbnail_filename}" if os.path.exists(thumbnail_path) else None,
                 "title": filename.split(".")[0]
             })
+
     return {"images": images}
+
+@router.get("/images/{filename}")
+def get_image(filename: str):
+    """Serve a specific image."""
+    file_path = os.path.join(IMAGES_FOLDER, filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(file_path)
+
+@router.delete("/images/{filename}")
+def delete_image(filename: str):
+    """Delete a specific image and its thumbnail."""
+    image_path = os.path.join(IMAGES_FOLDER, filename)
+    thumbnail_path = os.path.join(THUMBNAILS_FOLDER, filename)
+
+    if not os.path.exists(image_path):
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    # Delete the image
+    try:
+        os.remove(image_path)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")
+
+    # Delete the thumbnail if it exists
+    if os.path.exists(thumbnail_path):
+        try:
+            os.remove(thumbnail_path)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to delete thumbnail: {str(e)}")
+
+    return JSONResponse(content={"message": "Image and thumbnail deleted successfully"})
 
 @router.get("/images/{filename}")
 def get_image(filename: str):

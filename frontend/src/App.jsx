@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react'
-import './App.css' // Import the external CSS file
+import './App.css'
 import AppBar from './components/AppBar'
-import DrawerForm from './components/DrawerGen/DrawerGen'
-import SecondaryDrawer from './components/SecondaryDrawer' // Import the new drawer
+import DrawerForm from './components/DrawerGen'
+import SecondaryDrawer from './components/SecondaryDrawer'
+import Drawer from './components/DrawerSearch'
 import ImageCatalog from './components/ImageCatalog'
 import ImageModal from './components/ImageModal'
 import { useImages } from './utils/useImages'
 
 const App = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
-  const [isSecondaryDrawerOpen, setSecondaryDrawerOpen] = useState(false) // State for the second drawer
+  const [isSecondaryDrawerOpen, setSecondaryDrawerOpen] = useState(false)
+  const [isTertiaryDrawerOpen, setTertiaryDrawerOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [isModalOpen, setModalOpen] = useState(false)
   const { images, loadImages, addImage } = useImages()
+  const [filteredImages, setFilteredImages] = useState([])
 
   useEffect(() => {
     loadImages() // Load images on component mount
@@ -35,7 +38,7 @@ const App = () => {
 
   const handleCloseModal = () => {
     setModalOpen(false)
-    setSelectedImage(null) // Unload the image when the modal is closed
+    setSelectedImage(null)
   }
 
   const deleteImage = async (image) => {
@@ -47,22 +50,36 @@ const App = () => {
       })
       if (!response.ok) throw new Error('Failed to delete image')
       loadImages() // Reload the images after deletion
-      setModalOpen(false) // Close the modal
-      setSelectedImage(null) // Clear the selected image
+      setModalOpen(false)
+      setSelectedImage(null)
+      setFilteredImages([]) // Reset filtered images after deletion
     } catch (error) {
       console.error('Error deleting image:', error)
     }
   }
 
-  // Toggle Drawer States to Ensure Only One is Open at a Time
   const toggleDrawer = () => {
     setDrawerOpen(!isDrawerOpen)
-    if (!isDrawerOpen) setSecondaryDrawerOpen(false) // Close the secondary drawer
+    if (!isDrawerOpen) {
+      setSecondaryDrawerOpen(false)
+      setTertiaryDrawerOpen(false)
+    }
   }
 
   const toggleSecondaryDrawer = () => {
     setSecondaryDrawerOpen(!isSecondaryDrawerOpen)
-    if (!isSecondaryDrawerOpen) setDrawerOpen(false) // Close the main drawer
+    if (!isSecondaryDrawerOpen) {
+      setDrawerOpen(false)
+      setTertiaryDrawerOpen(false)
+    }
+  }
+
+  const toggleTertiaryDrawer = () => {
+    setTertiaryDrawerOpen(!isTertiaryDrawerOpen)
+    if (!isTertiaryDrawerOpen) {
+      setDrawerOpen(false)
+      setSecondaryDrawerOpen(false)
+    }
   }
 
   return (
@@ -70,20 +87,33 @@ const App = () => {
       <AppBar
         toggleDrawer={toggleDrawer}
         toggleSecondaryDrawer={toggleSecondaryDrawer}
+        toggleTertiaryDrawer={toggleTertiaryDrawer}
         handleDelete={isModalOpen ? () => deleteImage(selectedImage) : null}
       />
       <div className="App__content">
         <DrawerForm isDrawerOpen={isDrawerOpen} addImage={addImage} />
-        <SecondaryDrawer isDrawerOpen={isSecondaryDrawerOpen} />{' '}
-        {/* Add second drawer */}
+        <SecondaryDrawer isDrawerOpen={isSecondaryDrawerOpen} />
+        <Drawer
+          isDrawerOpen={isTertiaryDrawerOpen}
+          setFilteredImages={setFilteredImages}
+        />
         <div
           className={`App__main ${
-            isDrawerOpen || isSecondaryDrawerOpen
+            isDrawerOpen || isSecondaryDrawerOpen || isTertiaryDrawerOpen
               ? 'App__main--drawer-open'
               : ''
           }`}
         >
-          <ImageCatalog images={images} handleCardClick={handleCardClick} />
+          {console.log(images)}
+          <ImageCatalog
+            images={(filteredImages.length > 0 ? filteredImages : images).map(
+              (image, index) => ({
+                ...image,
+                id: index, // Add a unique id for each image
+              })
+            )}
+            handleCardClick={handleCardClick}
+          />
         </div>
       </div>
       <ImageModal
