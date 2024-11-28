@@ -35,8 +35,8 @@ backend/__pycache__/
 backend/*.pyc
 backend/env/
 backend/.venv/
-backend/images/
-backend/thumbnails/
+backend/public
+backend/routes/__pycache__
 
 # General
 *.bak
